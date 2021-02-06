@@ -12,7 +12,9 @@
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
+import 'package:offTime/screens/ranking_screen/RankingPage.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 
 void main() => runApp(MyApp());
 
@@ -56,28 +58,58 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Off Time '),
-      ),
+      appBar: _selectedIndex == 0
+          ? null
+          : AppBar(
+              title: const Text('Off Time '),
+            ),
       body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stairs_outlined),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+      bottomNavigationBar: BubbleBottomBar(
+        opacity: .2,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        elevation: 8,
+        // fabLocation: BubbleBottomBarFabLocation.end, //new
+        hasNotch: true, //new
+        hasInk: true, //new, gives a cute ink effect
+        inkColor: Colors.black12, //optional, uses theme color if not specified
+        items: [
+          BubbleBottomBarItem(
+              backgroundColor: Colors.red,
+              icon: Icon(
+                Icons.dashboard,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.dashboard,
+                color: Colors.red,
+              ),
+              title: Text("Home")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.deepPurple,
+              icon: Icon(
+                Icons.stairs_outlined,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.stairs_outlined,
+                color: Colors.deepPurple,
+              ),
+              title: Text("Analysis")),
+          BubbleBottomBarItem(
+              backgroundColor: Colors.indigo,
+              icon: Icon(
+                Icons.settings,
+                color: Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.settings,
+                color: Colors.indigo,
+              ),
+              title: Text("Settings")),
+        ],
+        // inkColor: Colors.black12,
       ),
     );
   }
