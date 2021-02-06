@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offTime/screens/ranking_screen/local_widgets/RoomInfo.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,12 +11,27 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color(0xFFEDD5D0),
-      body: Container(
-        // color: Color(0xFFEDD5D0),
-        child: Center(
-          child: Text("Home Pages"),
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          // TODO: we should extract this appBar and place it under widgets so that all of us can use it
+          title: Text('OffTime'),
+          expandedHeight: 210,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            background: RoomInfo(),
+          ),
         ),
-      ),
+        SliverFillRemaining(
+          child: Center(
+            child: Column(
+              children: [
+                FlatButton(onPressed: null, child: Text("Create Room")),
+                FlatButton(onPressed: null, child: Text("Join Room")),
+              ],
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
