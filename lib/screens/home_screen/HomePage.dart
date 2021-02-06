@@ -9,8 +9,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Home Page"),
+      // backgroundColor: Color(0xFFEDD5D0),
+      body: Container(
+        // color: Color(0xFFEDD5D0),
+        child: Center(
+          child: Text("Home Pages"),
+        ),
       ),
     );
   }
