@@ -12,7 +12,7 @@
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
-import 'package:offTime/screens/ranking_screen/RankingPage.dart';
+
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 
