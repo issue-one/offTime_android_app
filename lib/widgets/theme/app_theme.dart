@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 final lightAppTheme = ThemeData(
-  primaryColor: Colors.yellow,
+  primaryColor: Colors.white,
   accentColor: Colors.black,
   focusColor: Color.fromRGBO(255,189,0,1.0),
   textTheme: TextTheme(
@@ -23,7 +23,7 @@ final darkAppTheme = ThemeData(
       fontFamily: 'Corben',
       fontWeight: FontWeight.w700,
       fontSize: 24,
-      color: Colors.white,
+      color: Colors.black,
     ),
   ),
 );
