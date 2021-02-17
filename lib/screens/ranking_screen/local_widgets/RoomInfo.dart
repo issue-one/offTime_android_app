@@ -18,14 +18,14 @@ class RoomInfo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  child: new Text("Balance",
+                  child: new Text("",
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Poppins',
                           fontSize: 28.0)),
                 ),
                 Container(
-                  child: new Text("\u002420,914.33",
+                  child: new Text("Room Name",
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Poppins',
@@ -42,7 +42,7 @@ class RoomInfo extends StatelessWidget {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    child: new Text("\u002B24.93\u0025",
+                    child: new Text("host username",
                         style: const TextStyle(
                             color: Colors.white70,
                             fontFamily: 'Poppins',
@@ -68,7 +68,7 @@ class RoomInfo extends StatelessWidget {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0, left: 8.0),
-                    child: new Text("Currency",
+                    child: new Text("Start time",
                         style: const TextStyle(
                             color: Colors.white70,
                             fontFamily: 'Poppins',
@@ -92,7 +92,7 @@ class RoomInfo extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            'Janaury 2019',
+                            'End time',
                             style: const TextStyle(
                                 color: Colors.white70,
                                 fontFamily: 'Poppins',

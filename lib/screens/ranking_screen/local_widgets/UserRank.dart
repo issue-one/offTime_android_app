@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class UserInRoom extends StatelessWidget {
-  const UserInRoom({
+class UserRank extends StatelessWidget {
+  const UserRank({
     Key key,
   }) : super(key: key);
 
@@ -16,7 +16,6 @@ class UserInRoom extends StatelessWidget {
           CircleAvatar(
             backgroundImage: AssetImage("assets/images/istock.jpg"),
           ),
-          Icon(Icons.ac_unit),
           Text(
             "@username of user",
             style: TextStyle(fontSize: 16),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/ranking_screen/local_widgets/RoomInfo.dart';
 
-import 'local_widgets/UserInRoom.dart';
+import 'local_widgets/UserRank.dart';
 
 class RankingPage extends StatelessWidget {
   @override
@@ -21,16 +21,16 @@ class RankingPage extends StatelessWidget {
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
-            UserInRoom(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
+            UserRank(),
           ]))
         ],
       ),
