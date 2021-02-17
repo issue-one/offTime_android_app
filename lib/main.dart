@@ -11,8 +11,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
-//import 'package:offTime/screens/login_screen/LoginPage.dart';
-import 'package:offTime/screens/login_signup_screen/IntroPage.dart';
+
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
@@ -41,9 +40,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppThemeBloc, ThemeData>(builder: (context, state) {
      return  MaterialApp(
+       debugShowCheckedModeBanner: false,
       title: _title,
       theme: state,
-      home: IntroPage(),
+      home: MyStatefulWidget(),
       
       
     );
