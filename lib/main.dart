@@ -11,12 +11,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
+//import 'package:offTime/screens/login_screen/LoginPage.dart';
+import 'package:offTime/screens/login_signup_screen/IntroPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
-import 'package:offTime/screens/ranking_screen/RankingPage.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+
+void main() => runApp(
+  MultiProvider(
+      providers: [
+        BlocProvider(create: (context) => AppThemeBloc()),
+        
+      
+      ],
+      child: MyApp(),
+       
+    ),
+);
 
 /// This is the main application widget.
 class MyApp extends StatelessWidget {
@@ -24,10 +39,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return BlocBuilder<AppThemeBloc, ThemeData>(builder: (context, state) {
+     return  MaterialApp(
       title: _title,
-      home: MyStatefulWidget(),
+      theme: state,
+      home: IntroPage(),
+      
+      
     );
+    });
   }
 }
 
