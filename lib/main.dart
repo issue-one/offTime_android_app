@@ -1,32 +1,44 @@
 /// Flutter code sample for BottomNavigationBar
-
-// This example shows a [BottomNavigationBar] as it is used within a [Scaffold]
-// widget. The [BottomNavigationBar] has three [BottomNavigationBarItem]
-// widgets and the [currentIndex] is set to index 0. The selected item is
-// amber. The `_onItemTapped` function changes the selected item's index
-// and displays a corresponding message in the center of the [Scaffold].
-//
-// ![A scaffold with a bottom navigation bar containing three bottom navigation
-// bar items. The first one is selected.](https://flutter.github.io/assets-for-api-docs/assets/material/bottom_navigation_bar.png)
-
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
+import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
-
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+
+import 'Data/Data Providers/analytics_data.dart';
+import 'Data/Data Providers/analytics_to_server_data_provider.dart';
+import 'Data/Repository/analytics_repository.dart';
+import 'Data/Repository/analytics_to_server_repostiory.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
 /// This is the main application widget.
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
+  final AnalyticsRepository analyticsRepository =
+  AnalyticsRepository(AnalyticsDataProvider());
+  final AnalyticsToServerRepository analyticsToServerRepository =
+  AnalyticsToServerRepository(onlineAnalyticsProvider(http.Client()));
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AnalyticsOnlineBloc>(
+            create: (BuildContext context) =>
+                AnalyticsOnlineBloc(analyticsToServerRepository)),
+        BlocProvider<AnalyticsBloc>(
+          create: (BuildContext context) => AnalyticsBloc(analyticsRepository),
+        ),
+      ],
+      child: MaterialApp(
+        title: _title,
+        home: MyStatefulWidget(),
+      ),
     );
   }
 }
@@ -41,6 +53,7 @@ class MyStatefulWidget extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  List<String> appBarNames = ['Off Time', 'Analysis', ' Settings'];
   List<Widget> pages = [
     HomePage(),
     AnalyticsPage(),
@@ -53,7 +66,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     setState(() {
       _selectedIndex = index;
     });
-
   }
 
   @override
@@ -62,7 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       appBar: _selectedIndex == 0
           ? null
           : AppBar(
-              title: const Text('Off Time '),
+              title: Text('${appBarNames[_selectedIndex]}'),
             ),
       body: pages[_selectedIndex],
       bottomNavigationBar: BubbleBottomBar(
@@ -72,9 +84,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
         // fabLocation: BubbleBottomBarFabLocation.end, //new
-        hasNotch: true, //new
-        hasInk: true, //new, gives a cute ink effect
-        inkColor: Colors.black12, //optional, uses theme color if not specified
+        hasNotch: true,
+        //new
+        hasInk: true,
+        //new, gives a cute ink effect
+        inkColor: Colors.black12,
+        //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
               backgroundColor: Colors.red,

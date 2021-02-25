@@ -1,63 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
 import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
-import 'package:offTime/Data/Data%20Providers/analytics_data.dart';
-import 'package:offTime/Data/Repository/analytics_repository.dart';
+import 'package:offTime/models/newAppUsage.dart';
+import 'package:offTime/screens/analytics_screen/order_cruds_page.dart';
 
 class AnalyticsPage extends StatelessWidget {
-  final AnalyticsRepository analyticsRepository = AnalyticsRepository(
-      AnalyticsDataProvider());
+  Widget buildBottomSheet(BuildContext buildContext) {
+    return Container();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => AnalyticsBloc(analyticsRepository),
+    return DefaultTabController(
+      length: 4,
       child: Scaffold(
-        body: myAnalyticsPage(),
+        appBar: AppBar(
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                text: 'Daily',
+              ),
+              Tab(
+                text: 'Weekly',
+              ),
+              Tab(
+                text: 'Yearly',
+              ),
+              Tab(
+                text: 'History',
+              )
+            ],
+          ),
+        ),
+        body: MyAnalyticsPage(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => showModalBottomSheet(
+              context: context, builder: (context) => CrudButtons()),
+          child: Icon(Icons.menu),
+        ),
       ),
     );
   }
 }
 
-class myAnalyticsPage extends StatefulWidget {
-  const myAnalyticsPage({
+class MyAnalyticsPage extends StatefulWidget {
+  const MyAnalyticsPage({
     Key key,
   }) : super(key: key);
 
   @override
-  _myAnalyticsPageState createState() => _myAnalyticsPageState();
+  _MyAnalyticsPageState createState() => _MyAnalyticsPageState();
 }
 
-class _myAnalyticsPageState extends State<myAnalyticsPage> {
+class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
+  String appName;
+  String appPackageName;
+  String dateOfUse;
+  int timeDuration;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<AnalyticsBloc>(context).add(
-        AnalyticsEvent.AnalyticsDailyRequested);
+    BlocProvider.of<AnalyticsBloc>(context)
+        .add(AnalyticsEvent.AnalyticsDailyRequested);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: BlocBuilder<AnalyticsBloc, AnalyticsState>(
+    return TabBarView(children: [
+      BlocBuilder<AnalyticsBloc, AnalyticsState>(builder: (context, state) {
+        if (state is AnalyticsLoadingError) {
+          return Text('Analytics load failed');
+        }
+        if (state is AnalyticsLoading || state is AnalyticsInitial) {
+          return CircularProgressIndicator();
+        }
+        if (state is AnalyticsLoaded) {
+          return ListView.builder(
+              itemCount: state.appUsages.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    state.appUsages[index].appName,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  trailing: Text(
+                    state.appUsages[index].usage.inMinutes.toString() + ' mins',
+                    style: TextStyle(fontSize: 21),
+                  ),
+                );
+              });
+        }
+      }),
+      Column(
+        children: [
+          TextField(
+            onChanged: (text) => appName = text,
+          ),
+          TextField(
+            onChanged: (text2) => appPackageName = text2,
+          ),
+          TextField(
+            onChanged: (text3) => dateOfUse = text3,
+          ),
+          TextField(
+            onChanged: (text4) => timeDuration = int.parse(text4),
+          ),
+          RaisedButton(
+            onPressed: () {
+              NewAppUsage newAppUsage = NewAppUsage(
+                  appName: appName,
+                  appPackageName: appPackageName,
+                  dateOfUse: dateOfUse,
+                  timeDuration: timeDuration);
+              BlocProvider.of<AnalyticsOnlineBloc>(context)
+                  .add(CreateOnlineAnalysisTapped(newAppUsage));
+            },
+            child: Text('Create'),
+          )
+        ],
+      ),
+      Text('Tab3'),
+      BlocBuilder<AnalyticsOnlineBloc, AnalyticsOnlineState>(
           builder: (context, state) {
-            if (state is AnalyticsLoadingError) {
-              return Text('Analytics load failed');
-            }
-            if (state is AnalyticsLoading || state is AnalyticsInitial) {
-              return CircularProgressIndicator();
-            }
-            if (state is AnalyticsLoaded) {
-              return ListView.builder(itemCount: state.appUsages.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(title: Text(state.appUsages[index].appName),
-                      trailing: Text(
-                          state.appUsages[index].usage.inHours.toString()),);
-                  });
-            }
-          }),
-    );
+        if (state is GetOnlineAnalysisLoaded) {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  state.analyticsModels[index].appName,
+                ),
+                trailing:
+                    Text(state.analyticsModels[index].timeDuration.toString()),
+              );
+            },
+            itemCount: state.analyticsModels.length,
+          );
+        } else {
+          return Text("No data to display");
+        }
+      }),
+    ]);
   }
 }
