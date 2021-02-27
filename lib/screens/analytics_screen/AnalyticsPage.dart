@@ -94,34 +94,7 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
               });
         }
       }),
-      Column(
-        children: [
-          TextField(
-            onChanged: (text) => appName = text,
-          ),
-          TextField(
-            onChanged: (text2) => appPackageName = text2,
-          ),
-          TextField(
-            onChanged: (text3) => dateOfUse = text3,
-          ),
-          TextField(
-            onChanged: (text4) => timeDuration = int.parse(text4),
-          ),
-          RaisedButton(
-            onPressed: () {
-              NewAppUsage newAppUsage = NewAppUsage(
-                  appName: appName,
-                  appPackageName: appPackageName,
-                  dateOfUse: dateOfUse,
-                  timeDuration: timeDuration);
-              BlocProvider.of<AnalyticsOnlineBloc>(context)
-                  .add(CreateOnlineAnalysisTapped(newAppUsage));
-            },
-            child: Text('Create'),
-          )
-        ],
-      ),
+      Text('Tab2'),
       Text('Tab3'),
       BlocBuilder<AnalyticsOnlineBloc, AnalyticsOnlineState>(
           builder: (context, state) {

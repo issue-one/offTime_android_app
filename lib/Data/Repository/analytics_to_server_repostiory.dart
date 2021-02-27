@@ -13,7 +13,8 @@ class AnalyticsToServerRepository{
   AnalyticsToServerRepository(this._analyticsProvider);
 
   Future<void> createOnlineAnalysis(NewAppUsage appUsageInfo) async{
-    return await _analyticsProvider.createOnlineAnalytics(appUsageInfo);
+    //return await _analyticsProvider.createOnlineAnalytics(appUsageInfo);
+    return await _analyticsProvider.createOnlineAnaly();
 
     /*
     appUsageInfo.forEach((element) async{

@@ -12,6 +12,26 @@ class onlineAnalyticsProvider {
 
   onlineAnalyticsProvider(this.httpClient);
 
+  Future<AnalyticsModel> createOnlineAnaly() async{
+    final response = await httpClient.post(
+      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
+
+      body: jsonEncode(<String, dynamic>{
+        "appName": "Outo mechanic",
+        "appPackageName": "com.ambaethiopia.carcare",
+        "dateOfUse": "2021-02-16",
+        "timeDuration": 50
+      }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return AnalyticsModel.fromJson(jsonDecode(response.body));
+    } else {
+      print('response status code==${response.statusCode}');
+      //throw Exception('Failed to create AppUsageInfo');
+    }
+  }
+
   Future<AnalyticsModel> createOnlineAnalytics(
       NewAppUsage appUsageInfo) async {
     final response = await httpClient.post(
