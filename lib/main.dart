@@ -6,6 +6,7 @@ import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bl
 import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
+import 'package:offTime/screens/off_time_route.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 

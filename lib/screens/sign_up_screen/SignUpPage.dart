@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/off_time.dart';
+import 'package:offTime/screens/login_screen/LoginPage.dart';
+import 'package:offTime/screens/login_signup_screen/IntroPage.dart';
 
 class SignUpPage extends StatelessWidget{
   static const routeName = 'Sign Up';

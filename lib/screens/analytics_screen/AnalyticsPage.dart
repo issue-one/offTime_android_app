@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
 import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
-import 'package:offTime/models/newAppUsage.dart';
 import 'package:offTime/screens/analytics_screen/order_cruds_page.dart';
+
+enum AnalyticsTime {
+  DailyAnalytics,
+  WeeklyAnalystics,
+  MonthlyAnalytics,
+  YearlyAnalytics
+}
 
 class AnalyticsPage extends StatelessWidget {
   Widget buildBottomSheet(BuildContext buildContext) {
@@ -16,6 +22,23 @@ class AnalyticsPage extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                const PopupMenuItem(
+                    value: AnalyticsTime.DailyAnalytics, child: Text('Daily')),
+                const PopupMenuItem(
+                    value: AnalyticsTime.WeeklyAnalystics,
+                    child: Text('Weekly')),
+                const PopupMenuItem(
+                    value: AnalyticsTime.MonthlyAnalytics,
+                    child: Text('Monthly')),
+                const PopupMenuItem(
+                    value: AnalyticsTime.YearlyAnalytics,
+                    child: Text('Yearly')),
+              ],
+            )
+          ],
           bottom: TabBar(
             tabs: [
               Tab(
