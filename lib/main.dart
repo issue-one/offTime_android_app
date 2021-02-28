@@ -10,29 +10,19 @@ import 'package:offTime/screens/off_time_route.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:test/test.dart';
 
 
 import 'Data/Data Providers/analytics_data.dart';
 import 'Data/Data Providers/analytics_to_server_data_provider.dart';
 import 'Data/Repository/analytics_repository.dart';
 import 'Data/Repository/analytics_to_server_repostiory.dart';
-import 'package:http/http.dart' as http;
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
 
-  runApp(
-
-
-      MyApp()
-
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -110,11 +100,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*
       appBar: _selectedIndex == 0
           ? null
           : AppBar(
         title: Text('${appBarNames[_selectedIndex]}'),
       ),
+
+       */
       body: pages[_selectedIndex],
       bottomNavigationBar: BubbleBottomBar(
         opacity: .2,

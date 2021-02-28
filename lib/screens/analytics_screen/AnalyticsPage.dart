@@ -11,29 +11,56 @@ enum AnalyticsTime {
   YearlyAnalytics
 }
 
-class AnalyticsPage extends StatelessWidget {
+class AnalyticsPage extends StatefulWidget {
+  @override
+  _AnalyticsPageState createState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends State<AnalyticsPage> {
   Widget buildBottomSheet(BuildContext buildContext) {
     return Container();
   }
 
+  String queryPageName = 'Daily';
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
+          title: Text('Analytics'),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                const PopupMenuItem(
+            PopupMenuButton<AnalyticsTime>(
+              onSelected: (AnalyticsTime time){
+
+                setState(() {
+                  if(time == AnalyticsTime.DailyAnalytics){
+                    queryPageName = 'Daily';
+                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsDailyRequested);
+                  }else if (time == AnalyticsTime.WeeklyAnalystics){
+                    queryPageName = 'Weekly';
+                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsWeeklyRequested);
+                  }else if (time == AnalyticsTime.MonthlyAnalytics){
+                    queryPageName = 'Monthly';
+                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsMonthlyRequested);
+
+                  }else if (time == AnalyticsTime.YearlyAnalytics){
+                    queryPageName = 'Yearly';
+                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsYearlyRequested);
+                  }
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<AnalyticsTime>>[
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.DailyAnalytics, child: Text('Daily')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.WeeklyAnalystics,
                     child: Text('Weekly')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.MonthlyAnalytics,
                     child: Text('Monthly')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.YearlyAnalytics,
                     child: Text('Yearly')),
               ],
@@ -42,14 +69,9 @@ class AnalyticsPage extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(
-                text: 'Daily',
+                text: queryPageName,
               ),
-              Tab(
-                text: 'Weekly',
-              ),
-              Tab(
-                text: 'Yearly',
-              ),
+
               Tab(
                 text: 'History',
               )
@@ -117,8 +139,7 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
               });
         }
       }),
-      Text('Tab2'),
-      Text('Tab3'),
+
       BlocBuilder<AnalyticsOnlineBloc, AnalyticsOnlineState>(
           builder: (context, state) {
         if (state is GetOnlineAnalysisLoaded) {

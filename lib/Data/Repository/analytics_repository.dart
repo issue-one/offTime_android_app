@@ -16,6 +16,11 @@ class AnalyticsRepository{
     return await _analyticsDataProvider.getUsageStats(Duration(days: 7));
 
   }
+
+  Future<List<AppUsageInfo>> getMonthlyAppUsage() async{
+    return await _analyticsDataProvider.getUsageStats(Duration(days: 30));
+  }
+
   Future<List<AppUsageInfo>> getYearlyAppUsage() async{
     return await _analyticsDataProvider.getUsageStats(Duration(days: 365));
   }

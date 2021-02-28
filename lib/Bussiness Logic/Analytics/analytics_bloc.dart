@@ -39,6 +39,17 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
         yield AnalyticsLoadingError();
       }
     }
+    
+    if(event == AnalyticsEvent.AnalyticsMonthlyRequested){
+      yield AnalyticsLoading();
+      
+      try{
+        final monthlyAnalysis = await analyticsRepository.getMonthlyAppUsage();
+        yield AnalyticsLoaded(monthlyAnalysis);
+      } catch(_){
+        yield AnalyticsLoadingError();
+      }
+    }
 
     if(event == AnalyticsEvent.AnalyticsYearlyRequested){
       yield AnalyticsLoading();
