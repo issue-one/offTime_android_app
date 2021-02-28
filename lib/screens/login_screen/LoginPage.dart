@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/off_time.dart';
-import 'package:offTime/screens/sign_up_screen/SignUpPage.dart';
+
 
 class LoginPage extends StatelessWidget{
   static const routeName = 'Login';
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(50.0),
-      color: Theme.of(context).primaryColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Center(child: Text("Login", style: Theme.of(context).textTheme.headline2,),),
-          Expanded(child: LoginPageForm()),
-          Text("Don't have an account?", style: Theme.of(context).textTheme.headline2,),
-          GestureDetector(
-              onTap: (){ Navigator.pushNamed(context, SignUpPage.routeName);},
-              child: Text("Sign Up",  style: Theme.of(context).textTheme.headline2,)
-            )
-        ],
-      ));
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.all(50.0),
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Text("Login", style: Theme.of(context).textTheme.headline2,),),
+            LoginPageForm(),
+            Text("Don't have an account?", style: Theme.of(context).textTheme.headline2,),
+            GestureDetector(
+                onTap: (){ Navigator.pushNamed(context, SignUpPage.routeName);},
+                child: Text("Sign Up",  style: Theme.of(context).textTheme.headline2,)
+              )
+          ],
+        )),
+    );
   }
 
 }
@@ -44,12 +46,10 @@ class _LoginState extends State<LoginPageForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      body: Form(
-        key: _formKey,
-        child: Container(
-          color: Theme.of(context).primaryColor,
+    return Container(
+        color: Theme.of(context).primaryColor,
+        child: Form(
+          key: _formKey,
           child: Column(
             
             children: [
@@ -61,7 +61,10 @@ class _LoginState extends State<LoginPageForm> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(labelText: 'Userame', icon: Icon(Icons.person_outline, size: 30,)),
+                  decoration: InputDecoration(labelText: 'Userame', icon: Icon(Icons.person_outline, size: 30, color: Theme.of(context).accentColor,), 
+                    focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).accentColor),
+                    ),),
                   onSaved: (value) {
                     setState(() {
                       this._user["username"] = value;
@@ -72,9 +75,17 @@ class _LoginState extends State<LoginPageForm> {
                     if (value.isEmpty) {
                       return 'Enter password';
                     }
+                    if (value.length<8){
+                      return 'Password can not be less than 8 characters';
+                    }
                     return null;
                   },
-                  decoration: InputDecoration(labelText: 'Password', icon: Icon(Icons.lock_outline, size: 30,), fillColor: Theme.of(context).accentColor),
+                  decoration: InputDecoration(
+                    labelText: 'Password', 
+                    icon: Icon(Icons.lock_outline, size: 30,color: Theme.of(context).accentColor), 
+                    focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).accentColor),
+                    ),),
                   onSaved: (value) {
                     setState(() {
                       this._user["password"] = value;
@@ -102,7 +113,7 @@ class _LoginState extends State<LoginPageForm> {
             ],
           ),
         ),
-      ),
+      
     );
   }
 }

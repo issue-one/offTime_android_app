@@ -4,6 +4,7 @@ import 'package:mime/mime.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:offTime/models/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:offTime/models/user_update_input.dart';
 
 
@@ -69,15 +70,22 @@ class UserDataProvider{
 
      if(response.statusCode == 200){
        final user= jsonDecode(response.body) ;
-       return User.fromJson(user);
+       return User( username: user['username'],
+      createdAt: DateTime.parse(user['createdAt']),
+      updatedAt: DateTime.parse(user['updatedAt']),
+      email: user['email'],
+      pictureURL: user['pictureURL']== null ? null : user['pictureURL'],
+      roomHistory: (user['roomHistory'] as List).map((item) => item as String).toList(),
+      token: token
+      );
 
      } else{
        throw Exception('Failed to load User $username');
      }
    }
-   Future<String> refreshToken(User user) async {
+   Future<String> refreshToken(String token) async {
      final response= await httpClient.get('$_baseUrl/token-auth-refresh',
-       headers: {HttpHeaders.authorizationHeader: "Bearer" + user.token,
+       headers: {HttpHeaders.authorizationHeader: "Bearer" + token,
          HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
        },
      );
@@ -138,6 +146,16 @@ class UserDataProvider{
      return jsonDecode(responseBody.body);
 
    }
+  Future<void> addToSharedPreferences(User user) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setStringList("authInfo",[user.username,user.token]);
+}
+   Future<List<String>>getSharedPreferences() async {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      List<String> userAuth= sharedPreferences.getStringList("authInfo");
+      print(userAuth);
+      return userAuth;
+}
 
 
 

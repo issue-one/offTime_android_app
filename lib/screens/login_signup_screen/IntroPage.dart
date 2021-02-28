@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 
 class IntroPage extends StatelessWidget{
-
+static const routeName = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +18,21 @@ class IntroPage extends StatelessWidget{
                 bottom: 0.0,
                 left: 10.0,
                 right: 10.0,
-                height: 150,
+                height: 180,
                 child: Card(
+                  elevation: 4.0,
+                  shadowColor: Theme.of(context).accentColor,
 
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                
+                borderRadius: BorderRadius.circular(10.0),
               ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
 
-                      Text("Welcome"),
+                      Text("OffTime", style: Theme.of(context).textTheme.headline1,),
+                      Text("Take a break from your phone, use OffTime!", textAlign: TextAlign.center ,style: Theme.of(context).textTheme.headline3),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                        children: [
@@ -62,7 +66,7 @@ class MyElevatedButton extends StatelessWidget{
   Widget build(BuildContext context) {
     return SizedBox(
       width: 150,
-      height: 60,
+      height: 55,
       child: ElevatedButton(
 
           child: Text(title, style: Theme.of(context).textTheme.button),
@@ -81,7 +85,8 @@ class MyElevatedButton extends StatelessWidget{
 
 }
 class FullscreenSliderDemo extends StatelessWidget {
-  final List<String> imgList =['assets/images/t.png', 'assets/images/t.png','assets/images/t.png'];
+  final List<String> imgList =['assets/images/clock.jpg', 'assets/images/phone.jpg','assets/images/people.jpg'];
+  final List<String> textList = ["Keep track of your actions","Detach from your phone","Interact with people"];
   
   @override
   Widget build(BuildContext context) {
@@ -103,8 +108,19 @@ class FullscreenSliderDemo extends StatelessWidget {
               // autoPlay: false,
             ),
             items: imgList.map((item) => Container(
-              child: Center(
-                child: Image.asset(item, fit: BoxFit.cover, height: height,)
+              child: Container(
+                color: Theme.of(context).primaryColor,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Image.asset(item, fit: BoxFit.scaleDown, height: height*0.4,),
+                    Text(textList[imgList.indexOf(item)],),
+
+                  ], )
+                ),
               ),
             )).toList(),
           );

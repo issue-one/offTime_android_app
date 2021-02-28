@@ -34,7 +34,8 @@ void main() {
     MultiProvider(
       providers: [
         BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)),
+        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)..add(IsLoggedIn())),
+        BlocProvider(create: (context) => UserBloc(userAuthenticationBloc: UserAuthenticationBloc(userRepository: userRepository) , userRepository: userRepository)),
 
       ],
       child: MyApp(userRepository: userRepository,),
@@ -50,20 +51,32 @@ class MyApp extends StatelessWidget {
   MyApp({@required this.userRepository})
       : assert(userRepository != null);
 
+
+     
+
   @override
   Widget build(BuildContext context) {
+    
     return RepositoryProvider.value(
       value: this.userRepository,
-      child: BlocBuilder<AppThemeBloc, ThemeData>(builder: (context, state) {
-       return  MaterialApp(
-         debugShowCheckedModeBanner: false,
-        title: _title,
-        theme: state,
-        onGenerateRoute: OffTimeAppRoute.generateRoute,
+      child:  BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
+      builder: (context, userAuthenticationState) {
+          
+          return BlocBuilder<AppThemeBloc, ThemeData>(
+              builder: (context, state) {
+                return  MaterialApp(
+           debugShowCheckedModeBanner: false,
+          title: _title,
+          theme: state,
+           onGenerateRoute: 
+           OffTimeAppRoute.generateRoute ,
 
 
-      );
-      }),
+        );
+                
+              });
+        
+      })
     );
   }
 }

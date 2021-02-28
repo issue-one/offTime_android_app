@@ -5,6 +5,11 @@ import 'package:offTime/models/models.dart';
 abstract class UserAuthenticationEvent extends Equatable {
   const UserAuthenticationEvent();
 }
+class IsLoggedIn extends UserAuthenticationEvent {
+
+  @override
+  List<Object> get props => [];
+}
 
 class SignUpRequested extends UserAuthenticationEvent {
   final UserInput userInput;

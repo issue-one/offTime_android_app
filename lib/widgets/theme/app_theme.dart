@@ -7,9 +7,9 @@ final lightAppTheme = ThemeData(
   focusColor: Color.fromRGBO(255,189,0,1.0),
 
   textTheme: TextTheme(
-    headline1: TextStyle( fontFamily: 'RobotoMono', fontWeight: FontWeight.w700, fontSize: 38, color: Colors.white ),
-    headline2:TextStyle( fontFamily: 'RobotoMono', fontWeight: FontWeight.w700, fontSize: 24, color: Colors.black,),
-    headline3: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w700, fontSize: 20, color: Colors.white,),
+    headline1: TextStyle( fontFamily: 'Roboto', fontWeight: FontWeight.w500, fontSize: 28, color: Colors.black ),
+    headline2:TextStyle( fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 24, color: Colors.black,),
+    headline3: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w400, fontSize: 14, color: Colors.black,),
     button: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w700, fontSize: 20, color: Colors.white,),),
 );
 final darkAppTheme = ThemeData(
