@@ -35,11 +35,15 @@ class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthentic
     }
   }
   Stream<UserAuthenticationState> _mapLoginRequestedToState(LoginRequested event) async* {
-    yield UserAuthenticating();
+   
     try {
+      print(event.userInput);
       final user=await userRepository.loginUser(event.userInput);
+       print(event.userInput.password);
       yield UserAuthenticationSuccess(user: user);
-    } catch (_) {
+
+    } catch (e) {
+      print(e);
       yield UserAuthenticationFailure();
     }}
     Stream<UserAuthenticationState> _mapLogoutRequestedToState(LogoutRequested event) async* {

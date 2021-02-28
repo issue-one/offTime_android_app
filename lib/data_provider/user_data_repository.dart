@@ -8,12 +8,13 @@ import 'package:offTime/models/user_update_input.dart';
 
 
 class UserDataProvider{
-   final _baseUrl="";
+   final _baseUrl="http://192.168.1.5:8080";
    final http.Client httpClient;
 
   UserDataProvider({this.httpClient});
   //TODO 409 CONFLICTS 422 UNPROCESSABLE Password
    Future<User> createUser(UserInput userInput) async {
+      
      final http.Response response = await httpClient.put(
        '$_baseUrl/courses/${userInput.username}',
        headers: <String, String>{
@@ -29,20 +30,26 @@ class UserDataProvider{
      if (response.statusCode != 200) {
        throw Exception('Failed to add User.');
      }
+     print("yes");
      return User.fromJson(jsonDecode(response.body));
    }
    Future<String> postToken(UserInput userInput) async {
-     final http.Response response = await httpClient.post(
-       '$_baseUrl/token-auth',
+     print("${userInput.username}");
+     var uri = Uri.parse(_baseUrl);
+  print(uri.host);
+  print(uri.port);
+     print("here");
+     final response = await httpClient.post(
+       Uri.http('192.168.1.5:8080' ,'/token-auth'),
        headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
        },
-       body: jsonEncode(<String, dynamic>{
+       body: jsonEncode(<String, String>{
          'password': userInput.password,
          'username': userInput.username,
-
-       }),
+        }),
      );
+     print("here");
      switch(response.statusCode){
        case 200:
          return jsonDecode(response.body)['token'];
@@ -53,6 +60,7 @@ class UserDataProvider{
      }
    }
    Future<User> getUser(String username, String token) async{
+    
      final response= await httpClient.get('$_baseUrl/users/$username',
          headers: {HttpHeaders.authorizationHeader: "Bearer" + token,
            HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",

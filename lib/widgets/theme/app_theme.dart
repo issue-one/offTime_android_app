@@ -10,7 +10,7 @@ final lightAppTheme = ThemeData(
     headline1: TextStyle( fontFamily: 'RobotoMono', fontWeight: FontWeight.w700, fontSize: 38, color: Colors.white ),
     headline2:TextStyle( fontFamily: 'RobotoMono', fontWeight: FontWeight.w700, fontSize: 24, color: Colors.white,),
     headline3: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w700, fontSize: 20, color: Colors.white,),
-    button: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w700, fontSize: 40, color: Colors.white,),),
+    button: TextStyle(fontFamily: 'Corben', fontWeight: FontWeight.w700, fontSize: 20, color: Colors.white,),),
 );
 final darkAppTheme = ThemeData(
   primaryColor: Colors.black,

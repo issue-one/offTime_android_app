@@ -17,6 +17,7 @@ class SignUpRequested extends UserAuthenticationEvent {
 class LoginRequested extends UserAuthenticationEvent {
   final UserInput userInput;
 
+
   const LoginRequested({@required this.userInput}) : assert(userInput != null);
 
   @override

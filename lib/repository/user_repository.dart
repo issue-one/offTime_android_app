@@ -16,6 +16,7 @@ class UserRepository{
     return await userDataProvider.getUser(userInput.username, token);
   }
   Future<User> loginUser(UserInput userInput) async{
+    print("object");
     String token =await userDataProvider.postToken(userInput);
     return await userDataProvider.getUser(userInput.username, token);
   }
