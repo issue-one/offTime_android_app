@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-void main() => runApp(SettingsPage());
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -12,10 +11,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        //ask if it needs an app bar but i don't think it needs one cause it has it's own page. Back doesn't navigate to anything
-        appBar: AppBar(
-          title: Text("Settings") ,
-        ),
+
         body: ListView(
           children: <Widget>[
             SizedBox(height: 10,),

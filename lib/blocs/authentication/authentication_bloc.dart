@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:offTime/blocs/authentication_event.dart';
-
 import 'package:offTime/repository/repository.dart';
-import 'package:offTime/blocs/authentication_state.dart';
+import 'package:offTime/blocs/authentication/authentication.dart';
+
+
 
 class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
   final UserRepository userRepository ;

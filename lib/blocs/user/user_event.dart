@@ -1,9 +1,7 @@
-
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:offTime/models/models.dart';
-import 'package:offTime/models/user_update_input.dart';
 
 abstract class UserEvent extends Equatable {
   const UserEvent();
