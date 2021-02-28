@@ -108,6 +108,7 @@ class _SignUpState extends State<SignUpPageForm> {
                       userInput: UserInput( username: _user["username"], password: _user["password"], email: _user["email"]));
                     
                       BlocProvider.of<UserAuthenticationBloc>(context).add(event);
+                      Navigator.of(context).pushNamedAndRemoveUntil(MyStatefulWidget.routeName,(route)=>false );
                         
   }
                   },navigation: false,),
