@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-void main() => runApp(SettingsPage());
+//void main() => runApp(SettingsPage());
 
 class SettingsPage extends StatefulWidget {
   @override
