@@ -7,6 +7,14 @@ import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
+import 'package:offTime/off_time.dart';
+
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
 
 import 'Data/Data Providers/analytics_data.dart';
 import 'Data/Data Providers/analytics_to_server_data_provider.dart';
@@ -14,9 +22,26 @@ import 'Data/Repository/analytics_repository.dart';
 import 'Data/Repository/analytics_to_server_repostiory.dart';
 import 'package:http/http.dart' as http;
 
-void main() => runApp(MyApp());
+void main() {
+  Bloc.observer = SimpleBlocObserver();
+  final UserRepository userRepository = UserRepository(
+    userDataProvider: UserDataProvider(
+      httpClient: http.Client(),),);
+  runApp(
 
-/// This is the main application widget.
+
+    MultiProvider(
+      providers: [
+        BlocProvider(create: (context) => AppThemeBloc()),
+        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)),
+
+      ],
+      child: MyApp(userRepository: userRepository,),
+
+    ),
+  );
+}
+
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   final AnalyticsRepository analyticsRepository =
@@ -39,12 +64,25 @@ class MyApp extends StatelessWidget {
         title: _title,
         home: MyStatefulWidget(),
       ),
+    return RepositoryProvider.value(
+      value: this.userRepository,
+      child: BlocBuilder<AppThemeBloc, ThemeData>(builder: (context, state) {
+       return  MaterialApp(
+         debugShowCheckedModeBanner: false,
+        title: _title,
+        theme: state,
+        onGenerateRoute: OffTimeAppRoute.generateRoute,
+
+
+      );
+      }),
     );
   }
 }
 
 /// This is the stateful widget that the main application instantiates.
 class MyStatefulWidget extends StatefulWidget {
+  static const routeName = 'homeApp';
   MyStatefulWidget({Key key}) : super(key: key);
 
   @override
@@ -84,12 +122,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
         // fabLocation: BubbleBottomBarFabLocation.end, //new
-        hasNotch: true,
-        //new
-        hasInk: true,
-        //new, gives a cute ink effect
-        inkColor: Colors.black12,
-        //optional, uses theme color if not specified
+        hasNotch: true, //new
+        hasInk: true, //new, gives a cute ink effect
+        inkColor: Colors.black12, //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
               backgroundColor: Colors.red,
@@ -130,3 +165,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 }
+
+
+
+
+
