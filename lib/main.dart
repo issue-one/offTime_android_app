@@ -10,6 +10,10 @@
 // bar items. The first one is selected.](https://flutter.github.io/assets-for-api-docs/assets/material/bottom_navigation_bar.png)
 
 import 'package:flutter/material.dart';
+import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
+import 'package:offTime/screens/home_screen/HomePage.dart';
+
+import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
@@ -25,7 +29,7 @@ void main() {
     userDataProvider: UserDataProvider(
       httpClient: http.Client(),),);
   runApp(
-    
+
 
     MultiProvider(
       providers: [
@@ -39,7 +43,6 @@ void main() {
   );
 }
 
-/// This is the main application widget.
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   final UserRepository userRepository;
@@ -57,8 +60,8 @@ class MyApp extends StatelessWidget {
         title: _title,
         theme: state,
         onGenerateRoute: OffTimeAppRoute.generateRoute,
-        
-        
+
+
       );
       }),
     );
