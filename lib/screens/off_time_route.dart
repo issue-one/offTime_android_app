@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:offTime/screens/screens.dart';
 
+import '../off_time.dart';
+
 
 
 class OffTimeAppRoute {
@@ -22,6 +24,10 @@ class OffTimeAppRoute {
           builder: (context) => SignUpPage(
 
           ));
+    }
+    if(settings.name == MyStatefulWidget.routeName){
+      return MaterialPageRoute(builder:(context) => MyStatefulWidget(),);
+
     }
 
 

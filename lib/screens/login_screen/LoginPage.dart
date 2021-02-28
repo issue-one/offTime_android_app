@@ -94,7 +94,7 @@ class _LoginState extends State<LoginPageForm> {
                       userInput: UserInput( username: _user["username"], password: _user["password"]));
                       print(_user);
                       BlocProvider.of<UserAuthenticationBloc>(context).add(event);
-                        
+                      Navigator.of(context).pushNamedAndRemoveUntil(MyStatefulWidget.routeName,(route)=>false );
   }
                   },navigation: false,),
                 )

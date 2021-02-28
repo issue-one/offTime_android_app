@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
 
 /// This is the stateful widget that the main application instantiates.
 class MyStatefulWidget extends StatefulWidget {
+  static const routeName = 'homeApp';
   MyStatefulWidget({Key key}) : super(key: key);
 
   @override
