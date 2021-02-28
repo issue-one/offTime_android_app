@@ -21,7 +21,8 @@ class AnalyticsOnlineBloc extends Bloc<AnalyticsOnlineEvent, AnalyticsOnlineStat
     if(event is CreateOnlineAnalysisTapped){
       yield CreateOnlineAnalysisLoading();
       try{
-        final onlineAnalysis = await analyticsToServerRepository.createOnlineAnalysis(event.appUsageInfo);
+       // final onlineAnalysis = await analyticsToServerRepository.createOnlineAnalysis(event.appUsageInfo);
+        final onlineAnalysis = await analyticsToServerRepository.createOnlineAnalysis();
         yield CreateOnlineAnalysisLoaded();
       } catch(_){
         yield CreateOnlineAnalysisFailed();

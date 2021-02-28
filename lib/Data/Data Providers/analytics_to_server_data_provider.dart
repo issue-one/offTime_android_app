@@ -6,7 +6,7 @@ import 'package:offTime/models/analytics_model.dart';
 import 'package:offTime/models/newAppUsage.dart';
 
 class onlineAnalyticsProvider {
-  final _baseUrl = 'http://192.168.137.1:8080';
+  final _baseUrl = 'http://192.168.1.10:8080';
   final http.Client httpClient;
   final String offTimeUsername = 'tseahay';
 
@@ -14,21 +14,27 @@ class onlineAnalyticsProvider {
 
   Future<AnalyticsModel> createOnlineAnaly() async{
     final response = await httpClient.post(
-      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
+      Uri.http('192.168.1.10:8080', '/users/${offTimeUsername}/usageHistory'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
 
       body: jsonEncode(<String, dynamic>{
-        "appName": "Outo mechanic",
-        "appPackageName": "com.ambaethiopia.carcare",
-        "dateOfUse": "2021-02-16",
+        "appName": "Movex",
+        "appPackageName": "com.snap.snapchat",
+        "dateOfUse": "2008-02-16",
         "timeDuration": 50
       }),
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
       return AnalyticsModel.fromJson(jsonDecode(response.body));
-    } else {
+    } else if(response.statusCode == 400){
       print('response status code==${response.statusCode}');
-      //throw Exception('Failed to create AppUsageInfo');
+      throw Exception('Failed to create AppUsageInfo');
+    } else if(response.statusCode ==415) {
+      print(jsonDecode(response.body));
+      throw Exception('Failed to create AppUsage Info');
     }
   }
 
@@ -50,6 +56,7 @@ class onlineAnalyticsProvider {
       }),
     );
     print(response.statusCode);
+
     if (response.statusCode == 200) {
       return AnalyticsModel.fromJson(jsonDecode(response.body));
     } else {

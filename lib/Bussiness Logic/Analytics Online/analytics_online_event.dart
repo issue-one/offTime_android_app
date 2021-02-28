@@ -4,9 +4,10 @@ part of 'analytics_online_bloc.dart';
 abstract class AnalyticsOnlineEvent {}
 
 class CreateOnlineAnalysisTapped extends AnalyticsOnlineEvent{
-  final NewAppUsage appUsageInfo;
+ // final NewAppUsage appUsageInfo;
 
-  CreateOnlineAnalysisTapped(this.appUsageInfo);
+  //CreateOnlineAnalysisTapped(this.appUsageInfo);
+  CreateOnlineAnalysisTapped();
 }
 
 class ReadOnlineAnalysisTapped extends AnalyticsOnlineEvent{

@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:test/test.dart';
 
 
 import 'Data/Data Providers/analytics_data.dart';
@@ -24,21 +25,12 @@ import 'package:http/http.dart' as http;
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
-  final UserRepository userRepository = UserRepository(
-    userDataProvider: UserDataProvider(
-      httpClient: http.Client(),),);
+
   runApp(
 
 
-    MultiProvider(
-      providers: [
-        BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)),
+      MyApp()
 
-      ],
-      child: MyApp(userRepository: userRepository,),
-
-    ),
   );
 }
 
@@ -48,11 +40,19 @@ class MyApp extends StatelessWidget {
   AnalyticsRepository(AnalyticsDataProvider());
   final AnalyticsToServerRepository analyticsToServerRepository =
   AnalyticsToServerRepository(onlineAnalyticsProvider(http.Client()));
+  final UserRepository userRepository = UserRepository(
+    userDataProvider: UserDataProvider(
+      httpClient: http.Client(),),);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) =>
+            UserAuthenticationBloc(userRepository: userRepository)),
+
+        BlocProvider(create: (context) => AppThemeBloc()),
+
         BlocProvider<AnalyticsOnlineBloc>(
             create: (BuildContext context) =>
                 AnalyticsOnlineBloc(analyticsToServerRepository)),
@@ -60,22 +60,21 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => AnalyticsBloc(analyticsRepository),
         ),
       ],
-      child: MaterialApp(
-        title: _title,
-        home: MyStatefulWidget(),
+      child: RepositoryProvider.value(
+        value: this.userRepository,
+        child: BlocBuilder<AppThemeBloc, ThemeData>(
+          builder: (context, state) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: true,
+              title: _title,
+              theme: state,
+              home: MyStatefulWidget(),
+              onGenerateRoute: OffTimeAppRoute.generateRoute,
+            );
+          },
+
+        ),
       ),
-    return RepositoryProvider.value(
-      value: this.userRepository,
-      child: BlocBuilder<AppThemeBloc, ThemeData>(builder: (context, state) {
-       return  MaterialApp(
-         debugShowCheckedModeBanner: false,
-        title: _title,
-        theme: state,
-        onGenerateRoute: OffTimeAppRoute.generateRoute,
-
-
-      );
-      }),
     );
   }
 }
@@ -83,6 +82,7 @@ class MyApp extends StatelessWidget {
 /// This is the stateful widget that the main application instantiates.
 class MyStatefulWidget extends StatefulWidget {
   static const routeName = 'homeApp';
+
   MyStatefulWidget({Key key}) : super(key: key);
 
   @override
@@ -112,8 +112,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       appBar: _selectedIndex == 0
           ? null
           : AppBar(
-              title: Text('${appBarNames[_selectedIndex]}'),
-            ),
+        title: Text('${appBarNames[_selectedIndex]}'),
+      ),
       body: pages[_selectedIndex],
       bottomNavigationBar: BubbleBottomBar(
         opacity: .2,
@@ -122,9 +122,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
         // fabLocation: BubbleBottomBarFabLocation.end, //new
-        hasNotch: true, //new
-        hasInk: true, //new, gives a cute ink effect
-        inkColor: Colors.black12, //optional, uses theme color if not specified
+        hasNotch: true,
+        //new
+        hasInk: true,
+        //new, gives a cute ink effect
+        inkColor: Colors.black12,
+        //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
               backgroundColor: Colors.red,
