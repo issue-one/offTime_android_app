@@ -2,27 +2,16 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
-import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
-import 'package:offTime/screens/home_screen/HomePage.dart';
-import 'package:offTime/screens/off_time_route.dart';
-import 'package:offTime/screens/settings_screen/SettingsPage.dart';
+import 'package:offTime/repository/analytics_to_server_repostiory.dart';
+import 'package:offTime/screens/screens.dart';
 import 'package:offTime/off_time.dart';
 
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:test/test.dart';
+import 'package:offTime/widgets/theme/theme_bloc.dart';
 
-
-import 'Data/Data Providers/analytics_data.dart';
-import 'Data/Data Providers/analytics_to_server_data_provider.dart';
-import 'Data/Repository/analytics_repository.dart';
-import 'Data/Repository/analytics_to_server_repostiory.dart';
-import 'package:http/http.dart' as http;
+import 'blocs/Analytics/analytics_bloc.dart';
+import 'blocs/AnalyticsOnline/analytics_online_bloc.dart';
+import 'data_provider/analytics_to_server_data_provider.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();

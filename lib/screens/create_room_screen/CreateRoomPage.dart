@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:offTime/models/Room.dart';
-
-import '../../models/User.dart';
-import '../screens.dart';
+import 'package:offTime/models/models.dart';
+import 'package:offTime/screens/screens.dart';
 
 class CreateRoomPage extends StatelessWidget {
   static String routeName = "/createRoomPage";

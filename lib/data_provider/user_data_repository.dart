@@ -4,11 +4,10 @@ import 'package:mime/mime.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:offTime/models/models.dart';
-import 'package:offTime/models/user_update_input.dart';
 
 
 class UserDataProvider{
-   final _baseUrl="http://192.168.1.5:8080";
+   final _baseUrl="http://10.0.2.2:8080";
    final http.Client httpClient;
 
   UserDataProvider({this.httpClient});

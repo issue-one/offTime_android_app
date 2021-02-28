@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/blocs/room/room_event.dart';
 import 'package:offTime/blocs/room/room_state.dart';
-import 'package:offTime/repository/room_repository.dart';
-// import 'package:flutter_network/Room/bloc/bloc.dart';
-// import 'package:flutter_network/Room/course.dart';
+import 'package:offTime/repository/repository.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final RoomRepository roomRepository;

@@ -5,3 +5,5 @@ export 'off_time_route.dart';
 export 'settings_screen/SettingsPage.dart';
 export 'home_screen/HomePage.dart';
 export 'analytics_screen/AnalyticsPage.dart';
+export 'analytics_screen/order_cruds_page.dart';
+export 'create_room_screen/CreateRoomPage.dart';

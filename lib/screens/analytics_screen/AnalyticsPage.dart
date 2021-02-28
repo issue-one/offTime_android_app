@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
+import 'package:offTime/blocs/Analytics/analytics_bloc.dart';
+import 'package:offTime/blocs/AnalyticsOnline/analytics_online_bloc.dart';
+import 'package:offTime/blocs/blocs.dart';
 import 'package:offTime/screens/analytics_screen/order_cruds_page.dart';
 
 enum AnalyticsTime {
