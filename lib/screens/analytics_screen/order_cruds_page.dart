@@ -22,7 +22,7 @@ class CrudButtons extends StatelessWidget {
                     if (state is AnalyticsLoaded) {
                      // BlocProvider.of<AnalyticsOnlineBloc>(context)
                        //   .add(CreateOnlineAnalysisTapped(state.appUsages));
-                      BlocProvider.of<AnalyticsOnlineBloc>(context).add(CreateOnlineAnalysisTapped());
+                     // BlocProvider.of<AnalyticsOnlineBloc>(context).add(CreateOnlineAnalysisTapped());
                     }
                   },
                 ),

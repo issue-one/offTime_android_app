@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:app_usage/app_usage.dart';
 import 'package:http/http.dart' as http;
 import 'package:offTime/models/analytics_model.dart';
-import 'package:offTime/models/newAppUsage.dart';
 
 class onlineAnalyticsProvider {
-  final _baseUrl = 'http://192.168.1.10:8080';
+  final _baseUrl = 'http://192.168.1.4:8080';
   final http.Client httpClient;
   final String offTimeUsername = 'tseahay';
 
@@ -39,20 +38,20 @@ class onlineAnalyticsProvider {
   }
 
   Future<AnalyticsModel> createOnlineAnalytics(
-      NewAppUsage appUsageInfo) async {
+      AppUsageInfo appUsageInfo) async {
     final response = await httpClient.post(
-      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
-      /*
+      Uri.http('192.168.1.4:8080', '/users/${offTimeUsername}/apUsageHistory'),
+
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
 
-       */
+
       body: jsonEncode(<String, dynamic>{
         "appName": "${appUsageInfo.appName}",
-        "appPackageName": "${appUsageInfo.appPackageName}",
+        "appPackageName": "${appUsageInfo.packageName}",
         "dateOfUse": "2021-02-16",
-        "timeDuration": appUsageInfo.timeDuration
+        "timeDuration": appUsageInfo.usage.inMinutes
       }),
     );
     print(response.statusCode);
@@ -61,6 +60,7 @@ class onlineAnalyticsProvider {
       return AnalyticsModel.fromJson(jsonDecode(response.body));
     } else {
       print('response status code==${response.statusCode}');
+      print('response message == ${response.body}');
       //throw Exception('Failed to create AppUsageInfo');
     }
   }
@@ -93,7 +93,7 @@ class onlineAnalyticsProvider {
 
   Future updateOnlineAppusage(AppUsageInfo appUsageInfo) async{
     final response = await httpClient.post(
-      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
+      Uri.http('192.168.1.4:8080', '${offTimeUsername}/usageHistory'),
       /*
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

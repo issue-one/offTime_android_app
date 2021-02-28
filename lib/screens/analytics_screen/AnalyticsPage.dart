@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
 import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
-import 'package:offTime/screens/analytics_screen/order_cruds_page.dart';
 
 enum AnalyticsTime {
   DailyAnalytics,
@@ -32,26 +31,29 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           title: Text('Analytics'),
           actions: [
             PopupMenuButton<AnalyticsTime>(
-              onSelected: (AnalyticsTime time){
-
+              onSelected: (AnalyticsTime time) {
                 setState(() {
-                  if(time == AnalyticsTime.DailyAnalytics){
+                  if (time == AnalyticsTime.DailyAnalytics) {
                     queryPageName = 'Daily';
-                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsDailyRequested);
-                  }else if (time == AnalyticsTime.WeeklyAnalystics){
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsDailyRequested);
+                  } else if (time == AnalyticsTime.WeeklyAnalystics) {
                     queryPageName = 'Weekly';
-                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsWeeklyRequested);
-                  }else if (time == AnalyticsTime.MonthlyAnalytics){
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsWeeklyRequested);
+                  } else if (time == AnalyticsTime.MonthlyAnalytics) {
                     queryPageName = 'Monthly';
-                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsMonthlyRequested);
-
-                  }else if (time == AnalyticsTime.YearlyAnalytics){
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsMonthlyRequested);
+                  } else if (time == AnalyticsTime.YearlyAnalytics) {
                     queryPageName = 'Yearly';
-                    BlocProvider.of<AnalyticsBloc>(context).add(AnalyticsEvent.AnalyticsYearlyRequested);
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsYearlyRequested);
                   }
                 });
               },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<AnalyticsTime>>[
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<AnalyticsTime>>[
                 const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.DailyAnalytics, child: Text('Daily')),
                 const PopupMenuItem<AnalyticsTime>(
@@ -71,7 +73,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               Tab(
                 text: queryPageName,
               ),
-
               Tab(
                 text: 'History',
               )
@@ -79,11 +80,39 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ),
         ),
         body: MyAnalyticsPage(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showModalBottomSheet(
-              context: context, builder: (context) => CrudButtons()),
-          child: Icon(Icons.menu),
-        ),
+        floatingActionButton:
+            BlocBuilder<AnalyticsBloc,AnalyticsState>(
+              builder: (context,state){
+                if(state is AnalyticsLoaded){
+                  return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+
+                    FloatingActionButton(
+                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                          .add(CreateOnlineAnalysisTapped(state.appUsages)),
+                      child: Icon(Icons.add),
+                    ),
+                    FloatingActionButton(
+                        child: Icon(Icons.add_chart),
+                        onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                            .add(ReadOnlineAnalysisTapped())),
+                    FloatingActionButton(
+                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                  .add(UpdateOnlineAnalysisTappped(state.appUsages)),
+
+
+                      child: Icon(Icons.refresh),
+
+
+                    ),
+                    FloatingActionButton(
+                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                          .add(DeleteOnlineAnalysisTapped()),
+                      child: Icon(Icons.delete_forever),
+                    ),
+                  ]);
+                }
+              }
+            ),
       ),
     );
   }
@@ -139,7 +168,6 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
               });
         }
       }),
-
       BlocBuilder<AnalyticsOnlineBloc, AnalyticsOnlineState>(
           builder: (context, state) {
         if (state is GetOnlineAnalysisLoaded) {
@@ -162,3 +190,16 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
     ]);
   }
 }
+
+
+
+
+
+/*
+          FloatingActionButton(
+              onPressed: () => showModalBottomSheet(
+                  context: context, builder: (context) => CrudButtons()),
+              child: Icon(Icons.menu),
+          ),
+
+                 */
