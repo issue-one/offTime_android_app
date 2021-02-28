@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/off_time.dart';
 
 class SignUpPage extends StatelessWidget{
-  static const routeName = 'signUp';
+  static const routeName = 'Sign Up';
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +13,14 @@ class SignUpPage extends StatelessWidget{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Center(child: Text("Sign Up"),),
-          SizedBox(
-           
-            child: LoginPageForm()),
-            Text("Don't have an account?"),
+          Center(child: Text("Sign Up", style: Theme.of(context).textTheme.headline2,),),
+          Expanded(child: SignUpPageForm()),
+          Text("Already have an account?", style: Theme.of(context).textTheme.headline2,),
+          GestureDetector(
+              onTap: (){ Navigator.pushNamed(context, LoginPage.routeName);},
+              child: Text("Login",  style: Theme.of(context).textTheme.headline2,)
+            )
+            
             
         ],
       ));
@@ -65,6 +68,20 @@ class _SignUpState extends State<SignUpPageForm> {
                       this._user["username"] = value;
                     });
                   }),
+                  TextFormField(
+                  
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter Email';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(labelText: 'Email', icon: Icon(Icons.email_outlined, size: 30,), ),
+                  onSaved: (value) {
+                    setState(() {
+                      this._user["email"] = value;
+                    });
+                  }),
               TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
@@ -72,7 +89,7 @@ class _SignUpState extends State<SignUpPageForm> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(labelText: 'Password', icon: Icon(Icons.lock_outline, size: 30,), fillColor: Theme.of(context).accentColor),
+                  decoration: InputDecoration(labelText: 'Password', icon: Icon(Icons.lock_outline, size: 30,), fillColor: Colors.amber),
                   onSaved: (value) {
                     setState(() {
                       this._user["password"] = value;
@@ -83,14 +100,13 @@ class _SignUpState extends State<SignUpPageForm> {
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width* 0.75,
-                  child: MyElevatedButton(title: "Login",myOnPressed: (){
+                  child: MyElevatedButton(title: "Sign Up",myOnPressed: (){
                       final form = _formKey.currentState;
                       if (form.validate()) {
                           form.save();
-                          print("herekndks");
-                      final UserAuthenticationEvent event= LoginRequested(
-                      userInput: UserInput( username: _user["username"], password: _user["password"]));
-                      print(_user);
+                      final UserAuthenticationEvent event= SignUpRequested(
+                      userInput: UserInput( username: _user["username"], password: _user["password"], email: _user["email"]));
+                    
                       BlocProvider.of<UserAuthenticationBloc>(context).add(event);
                         
   }

@@ -16,7 +16,7 @@ class UserDataProvider{
    Future<User> createUser(UserInput userInput) async {
       
      final http.Response response = await httpClient.put(
-       '$_baseUrl/courses/${userInput.username}',
+       '$_baseUrl/users/${userInput.username}',
        headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
        },
@@ -62,7 +62,7 @@ class UserDataProvider{
    Future<User> getUser(String username, String token) async{
     
      final response= await httpClient.get('$_baseUrl/users/$username',
-         headers: {HttpHeaders.authorizationHeader: "Bearer" + token,
+         headers: {HttpHeaders.authorizationHeader: "Bearer " + token,
            HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
          },
      );

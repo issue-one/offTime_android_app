@@ -14,15 +14,12 @@ class LoginPage extends StatelessWidget{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Center(child: Text("Login"),),
-          SizedBox(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: LoginPageForm()),
-            Text("Don't have an account?"),
-            GestureDetector(
+          Center(child: Text("Login", style: Theme.of(context).textTheme.headline2,),),
+          Expanded(child: LoginPageForm()),
+          Text("Don't have an account?", style: Theme.of(context).textTheme.headline2,),
+          GestureDetector(
               onTap: (){ Navigator.pushNamed(context, SignUpPage.routeName);},
-              child: Text("Sign Up")
+              child: Text("Sign Up",  style: Theme.of(context).textTheme.headline2,)
             )
         ],
       ));
