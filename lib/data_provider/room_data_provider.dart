@@ -3,12 +3,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:offTime/models/Room.dart';
 import 'package:offTime/models/models.dart';
-import 'package:offTime/models/user_update_input.dart';
 
 class RoomDataProvider {
-  final _baseUrl = "http://127.0.0.1:8080";
+  final _baseUrl = "http://10.0.2.2:8080";
   final http.Client httpClient;
 
   RoomDataProvider({this.httpClient});

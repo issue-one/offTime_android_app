@@ -10,7 +10,10 @@ import 'package:offTime/screens/off_time_route.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -21,8 +24,19 @@ import 'Data/Repository/analytics_to_server_repostiory.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
+  final UserRepository userRepository = UserRepository(
+    userDataProvider: UserDataProvider(
+      httpClient: http.Client(),),);
+  runApp(MultiProvider(
+      providers: [
+        BlocProvider(create: (context) => AppThemeBloc()),
+        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)..add(IsLoggedIn())),
+        BlocProvider(create: (context) => UserBloc(userAuthenticationBloc: UserAuthenticationBloc(userRepository: userRepository) , userRepository: userRepository)),
 
-  runApp(MyApp());
+      ],
+      child: MyApp(userRepository: userRepository,),
+
+    ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -116,12 +130,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
         // fabLocation: BubbleBottomBarFabLocation.end, //new
-        hasNotch: true,
-        //new
-        hasInk: true,
-        //new, gives a cute ink effect
-        inkColor: Colors.black12,
-        //optional, uses theme color if not specified
+        hasNotch: true, //new
+        hasInk: true, //new, gives a cute ink effect
+        inkColor: Colors.black12, //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
               backgroundColor: Colors.red,

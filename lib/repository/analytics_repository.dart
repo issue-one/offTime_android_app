@@ -1,8 +1,5 @@
-
-
 import 'package:app_usage/app_usage.dart';
-import 'package:offTime/Data/Data%20Providers/analytics_data.dart';
-
+import '../data_provider/data_provider.dart';
 class AnalyticsRepository{
   final AnalyticsDataProvider _analyticsDataProvider;
 

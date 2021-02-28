@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs.dart';
+// import 'blocs.dart';
 import 'package:meta/meta.dart';
+import 'package:offTime/blocs/authentication/authentication_bloc.dart';
+import 'package:offTime/blocs/authentication/authentication_state.dart';
+import 'package:offTime/blocs/user/user_event.dart';
+import 'package:offTime/blocs/user/user_state.dart';
 
 import 'package:offTime/repository/repository.dart';
-import 'package:offTime/blocs/authentication_state.dart';
+
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository ;

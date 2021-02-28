@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:offTime/blocs/authentication_event.dart';
-
 import 'package:offTime/repository/repository.dart';
-import 'package:offTime/blocs/authentication_state.dart';
+import 'package:offTime/blocs/authentication/authentication.dart';
+
+
 
 class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
   final UserRepository userRepository ;
@@ -19,6 +19,23 @@ class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthentic
       yield* _mapLoginRequestedToState(event);
     } else if (event is LogoutRequested) {
       yield* _mapLogoutRequestedToState(event);
+    }else if (event is IsLoggedIn) {
+      yield* _mapIsLoggedInToState(event);
+    }
+  }
+
+
+  Stream<UserAuthenticationState> _mapIsLoggedInToState(IsLoggedIn event) async* {
+    yield UserAuthenticating();
+    try {
+      final sharedData= await userRepository.getPreferences();
+    //  final refreshedToken=await userRepository.refreshToken(sharedData[1]);
+      final user= await userRepository.getUser(sharedData[0],sharedData[1]);
+
+
+      yield UserAuthenticationSuccess(user: user);
+    } catch (_) {
+      yield UserAuthenticationFailure();
     }
   }
 

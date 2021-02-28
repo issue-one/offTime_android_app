@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:app_usage/app_usage.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:offTime/Data/Repository/analytics_to_server_repostiory.dart';
-import 'package:offTime/models/analytics_model.dart';
-import 'package:offTime/models/newAppUsage.dart';
+import 'package:offTime/models/models.dart';
+import 'package:offTime/repository/analytics_to_server_repostiory.dart';
 
 part 'analytics_online_event.dart';
 part 'analytics_online_state.dart';

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:offTime/models/Room.dart';
+import 'package:offTime/models/models.dart';
 
 abstract class RoomEvent extends Equatable {
   const RoomEvent();

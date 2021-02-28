@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:app_usage/app_usage.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:offTime/Data/Repository/analytics_repository.dart';
-
+import 'package:offTime/repository/analytics_repository.dart';
 part 'analytics_event.dart';
 
 part 'analytics_state.dart';
