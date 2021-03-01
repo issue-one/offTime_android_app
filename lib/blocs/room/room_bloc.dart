@@ -32,5 +32,23 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         yield RoomOperationFailure();
       }
     }
+    if (event is RoomEnd) {
+      try {
+        await roomRepository.createRoom(event.room);
+        // final rooms = await roomRepository.joinRoom(RoomEnd(room));
+      } catch (e) {
+        print(e);
+        yield RoomOperationFailure();
+      }
+    }
+    if (event is RoomExit) {
+      try {
+        await roomRepository.createRoom(event.room);
+        // final rooms = await roomRepository.joinRoom(RoomEnd(room));
+      } catch (e) {
+        print(e);
+        yield RoomOperationFailure();
+      }
+    }
   }
 }

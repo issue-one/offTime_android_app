@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:offTime/models/models.dart';
 import 'package:offTime/screens/screens.dart';
 
-class CreateRoomPage extends StatelessWidget {
+class CreateRoomPage extends StatefulWidget {
   static String routeName = "/createRoomPage";
+
+  @override
+  _CreateRoomPageState createState() => _CreateRoomPageState();
+}
+
+class _CreateRoomPageState extends State<CreateRoomPage> {
   @override
   Widget build(BuildContext context) {
     User user = ModalRoute.of(context).settings.arguments;
     final _formKey = GlobalKey<FormState>();
 
-    final Map<String, dynamic> _room = {};
+    String _roomName = "";
 
     return Scaffold(
       appBar: AppBar(
@@ -44,11 +50,11 @@ class CreateRoomPage extends StatelessWidget {
                   ),
                 ),
                 onSaved: (value) {
-                  // setState(
-                  //   () {
-                  //     _room["name"] = value;
-                  //   },
-                  // );
+                  setState(
+                    () {
+                      _roomName = value;
+                    },
+                  );
                 },
               ),
               // Add password here too?
@@ -63,8 +69,7 @@ class CreateRoomPage extends StatelessWidget {
                         if (form.validate()) {
                           form.save();
                           // print("herekndks");
-                          Room(
-                              hostUsername: user.username, name: _room["name"]);
+                          Room(hostUsername: user.username, name: _roomName);
 
                           // final UserAuthenticationEvent event= LoginRequested(
                           // userInput: UserInput( username: _user["username"], password: _user["password"]));
