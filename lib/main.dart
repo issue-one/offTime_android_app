@@ -22,24 +22,30 @@ import 'package:offTime/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-
 void main() {
   Bloc.observer = SimpleBlocObserver();
   final UserRepository userRepository = UserRepository(
     userDataProvider: UserDataProvider(
-      httpClient: http.Client(),),);
+      httpClient: http.Client(),
+    ),
+  );
   runApp(
-
-
     MultiProvider(
       providers: [
+        BlocProvider(create: (context) => WsConnectionBloc()),
         BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)),
-        BlocProvider(create: (context) => UserBloc(userAuthenticationBloc: UserAuthenticationBloc(userRepository: userRepository) , userRepository: userRepository)),
-
+        BlocProvider(
+            create: (context) =>
+                UserAuthenticationBloc(userRepository: userRepository)),
+        BlocProvider(
+            create: (context) => UserBloc(
+                userAuthenticationBloc:
+                    UserAuthenticationBloc(userRepository: userRepository),
+                userRepository: userRepository)),
       ],
-      child: MyApp(userRepository: userRepository,),
-
+      child: MyApp(
+        userRepository: userRepository,
+      ),
     ),
   );
 }
@@ -48,39 +54,26 @@ class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   final UserRepository userRepository;
 
-  MyApp({@required this.userRepository})
-      : assert(userRepository != null);
-
-
-     
+  MyApp({@required this.userRepository}) : assert(userRepository != null);
 
   @override
   Widget build(BuildContext context) {
-    
     return RepositoryProvider.value(
-      value: this.userRepository,
-      child:  BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
-      builder: (context, userAuthenticationState) {
-          
+        value: this.userRepository,
+        child: BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
+            builder: (context, userAuthenticationState) {
           return BlocBuilder<AppThemeBloc, ThemeData>(
               builder: (context, state) {
-                return  MaterialApp(
-           debugShowCheckedModeBanner: false,
-          title: _title,
-          theme: state,
-           onGenerateRoute: 
-           OffTimeAppRoute.generateRoute ,
-
-
-        );
-                
-              });
-        
-      })
-    );
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: _title,
+              theme: state,
+              onGenerateRoute: OffTimeAppRoute.generateRoute,
+            );
+          });
+        }));
   }
 }
-
 
 class MyStatefulWidget extends StatefulWidget {
   static const routeName = 'homeApp';
@@ -165,8 +158,3 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 }
-
-
-
-
-

@@ -22,11 +22,13 @@ class OffTimeSocket {
   OffTimeSocket(
     this.baseUrl, {
     Map<String, void Function(OffTimeSocket socket, dynamic data)>
-        eventListeners = const {},
+        eventListeners,
     this.onError,
     this.onFinish,
     this.onMessage,
-  }) : this._eventListeners = eventListeners;
+  }) : this._eventListeners = new Map() {
+    if (eventListeners != null) this._eventListeners.addAll(eventListeners);
+  }
 
   // private stuff
 
