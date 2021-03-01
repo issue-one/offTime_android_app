@@ -14,20 +14,17 @@ class RoomRepository {
   Future<Room> createRoom(Room room) async {
     return await roomDataProvider.createRoom(room);
   }
+
   Future<Room> getRoom(String token, String name) async {
-    return await roomDataProvider.getRoom(token,name);
+    return await roomDataProvider.getRoom(token, name);
   }
+
   Future<List<Room>> getRooms(String token) async {
     return await roomDataProvider.getRooms(token);
   }
 
   Future<Room> joinRoom(Room room) async {
     return await roomDataProvider.joinRoom(room);
-  }
-
-  Future<Room> getRoom(String roomId) async {
-    var room = this.rooms[roomId];
-    if (room == null) throw Exception("room not found");
   }
 
   Future<Room> createRoomWs(Room input) async {

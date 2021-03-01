@@ -4,73 +4,79 @@ import 'package:meta/meta.dart';
 import 'package:offTime/repository/repository.dart';
 import 'package:offTime/blocs/authentication/authentication.dart';
 
+class UserAuthenticationBloc
+    extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
+  final UserRepository userRepository;
 
+  UserAuthenticationBloc({@required this.userRepository})
+      : assert(userRepository != null),
+        super(UserNotAuthenticated());
 
-class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
-  final UserRepository userRepository ;
+  factory UserAuthenticationBloc.checkIfLoggedIn(
+          {@required UserRepository userRepository}) =>
+      UserAuthenticationBloc(userRepository: userRepository)..add(IsLoggedIn());
 
-  UserAuthenticationBloc({@required this.userRepository}) : assert(userRepository !=null),super(UserAuthenticating());
-
-
-  Stream<UserAuthenticationState> mapEventToState(UserAuthenticationEvent event) async* {
-    if (event is SignUpRequested ) {
+  Stream<UserAuthenticationState> mapEventToState(
+      UserAuthenticationEvent event) async* {
+    if (event is SignUpRequested) {
       yield* _mapSignUpRequestedToState(event);
     } else if (event is LoginRequested) {
       yield* _mapLoginRequestedToState(event);
     } else if (event is LogoutRequested) {
       yield* _mapLogoutRequestedToState(event);
-    }else if (event is IsLoggedIn) {
+    } else if (event is IsLoggedIn) {
       yield* _mapIsLoggedInToState(event);
     }
   }
 
-
-  Stream<UserAuthenticationState> _mapIsLoggedInToState(IsLoggedIn event) async* {
-    
+  Stream<UserAuthenticationState> _mapIsLoggedInToState(
+      IsLoggedIn event) async* {
     try {
-      final sharedData= await userRepository.getPreferences();
-      
-    //  final refreshedToken=await userRepository.refreshToken(sharedData[1]);
-      final user= await userRepository.getUser(sharedData[0],sharedData[1]);
+      final sharedData = await userRepository.getPreferences();
+      if (sharedData == null) {
+        yield UserNotAuthenticated();
+        return;
+      }
+      //  final refreshedToken=await userRepository.refreshToken(sharedData[1]);
+      final user = await userRepository.getUser(sharedData[0], sharedData[1]);
       yield UserAuthenticationSuccess(user: user);
-    } catch (_) {
-      yield UserAuthenticationFailure();
+    } catch (err) {
+      yield UserAuthenticationFailure(errMessage: err.toString());
     }
   }
 
-
-
-  Stream<UserAuthenticationState> _mapSignUpRequestedToState(SignUpRequested event) async* {
-    yield UserAuthenticating();
+  Stream<UserAuthenticationState> _mapSignUpRequestedToState(
+      SignUpRequested event) async* {
+    yield UserAuthenticationWaiting();
     try {
-      final user=await userRepository.createUser(event.userInput);
+      final user = await userRepository.createUser(event.userInput);
 
       yield UserAuthenticationSuccess(user: user);
-    } catch (_) {
-      yield UserAuthenticationFailure();
+    } catch (err) {
+      yield UserAuthenticationFailure(errMessage: err.toString());
     }
   }
-  Stream<UserAuthenticationState> _mapLoginRequestedToState(LoginRequested event) async* {
-   
+
+  Stream<UserAuthenticationState> _mapLoginRequestedToState(
+      LoginRequested event) async* {
     try {
       print(event.userInput);
-      final user=await userRepository.loginUser(event.userInput);
-       print(event.userInput.password);
+      final user = await userRepository.loginUser(event.userInput);
+      print(event.userInput.password);
       yield UserAuthenticationSuccess(user: user);
-
-    } catch (e) {
-      print(e);
-      yield UserAuthenticationFailure();
-    }}
-    Stream<UserAuthenticationState> _mapLogoutRequestedToState(LogoutRequested event) async* {
-      yield UserAuthenticating();
-      try {
-        final user=await userRepository.logoutUser(event.user);
-        yield UserAuthenticationSuccess(user: user);
-      } catch (_) {
-        yield UserAuthenticationFailure();
-      }
+    } catch (err) {
+      yield UserAuthenticationFailure(errMessage: err.toString());
+    }
   }
 
-
+  Stream<UserAuthenticationState> _mapLogoutRequestedToState(
+      LogoutRequested event) async* {
+    yield UserAuthenticationWaiting();
+    try {
+      await userRepository.logoutUser();
+      yield UserNotAuthenticated();
+    } catch (err) {
+      yield UserAuthenticationFailure(errMessage: err.toString());
+    }
+  }
 }

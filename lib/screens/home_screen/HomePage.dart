@@ -11,6 +11,91 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  Widget build(BuildContext ctx) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("OffTime"),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: RaisedButton(
+                child: Text("Create Room"),
+                onPressed: () => print("creating room"),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: RaisedButton(
+                child: Text("Join Room"),
+                onPressed: () => print("joining room"),
+              ),
+            ),
+          ),
+          /* Expanded(
+            flex: 2,
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    alignment: AlignmentDirectional.topStart,
+                    child: const Text(
+                      "Room History",
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ), */
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: AlignmentDirectional.topStart,
+                    child: const Text(
+                      "Room History",
+                    ),
+                  ),
+                  Container(
+                    child: Expanded(
+                      child: BlocBuilder<RoomBloc, RoomState>(
+                        builder: (ctx, state) => state is RoomsLoadSuccess
+                            ? ListView.builder(
+                                itemCount: state.rooms.length,
+                                itemBuilder: (ctx, index) => ListTile(
+                                  title: Text(state.rooms[index].name),
+                                ),
+                              )
+                            : Center(
+                                child: const Text("Room History Empty"),
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WsShowcase extends StatefulWidget {
+  static const routeName = 'home';
+  @override
+  _WsShowcaseState createState() => _WsShowcaseState();
+}
+
+class _WsShowcaseState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -32,14 +117,14 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 BlocBuilder<WsConnectionBloc, WsState>(
-                  builder: (ctx, state) => ElevatedButton(
+                  builder: (ctx, state) => RaisedButton(
                     child: const Text("Connect"),
                     onPressed: () =>
                         ctx.read<WsConnectionBloc>().add(Connect()),
                   ),
                 ),
                 BlocBuilder<WsConnectionBloc, WsState>(
-                  builder: (ctx, state) => ElevatedButton(
+                  builder: (ctx, state) => RaisedButton(
                     child: const Text("Disconnect"),
                     onPressed: () =>
                         ctx.read<WsConnectionBloc>().add(StopConnection()),
@@ -108,7 +193,7 @@ class _EmitListenShowcaseState extends State<EmitListenShowcase> {
                   ),
                 ),
                 BlocBuilder<WsConnectionBloc, WsState>(
-                  builder: (ctx, state) => ElevatedButton(
+                  builder: (ctx, state) => RaisedButton(
                     onPressed: state == WsState.Connected
                         ? () {
                             final form = _formKey.currentState;
@@ -210,7 +295,7 @@ class _ResponseRequestShowcaseState extends State<ResponseRequestShowcase> {
                   ),
                 ),
                 BlocBuilder<WsConnectionBloc, WsState>(
-                  builder: (ctx, state) => ElevatedButton(
+                  builder: (ctx, state) => RaisedButton(
                     onPressed: state == WsState.Connected
                         ? () {
                             final form = _formKey.currentState;

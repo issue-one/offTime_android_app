@@ -8,8 +8,9 @@ import '../../off_time.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final RoomRepository roomRepository;
+  final User user;
 
-  RoomBloc({@required this.roomRepository})
+  RoomBloc({@required this.roomRepository, @required this.user})
       : assert(roomRepository != null),
         super(RoomLoading());
 
@@ -28,7 +29,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     if (event is RoomGet) {
       yield RoomLoading();
       try {
-        await roomRepository.getRoom(event.token,event.name);
+        await roomRepository.getRoom(event.token, event.name);
         yield RoomsLoadSuccess();
       } catch (e) {
         print(e);
@@ -48,7 +49,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
     if (event is RoomJoin) {
       try {
-        Room room=  await roomRepository.createRoom(event.room);
+        Room room = await roomRepository.createRoom(event.room);
         await roomRepository.joinRoom(room);
         yield RoomsLoadSuccess();
       } catch (e) {
@@ -60,7 +61,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       try {
         yield RoomLoading();
         yield RoomsLoadSuccess();
-         
       } catch (e) {
         print(e);
         yield RoomOperationFailure();
@@ -70,8 +70,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       try {
         yield RoomLoading();
         yield RoomsLoadSuccess();
-
-        
       } catch (e) {
         print(e);
         yield RoomOperationFailure();

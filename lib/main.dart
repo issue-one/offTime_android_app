@@ -8,8 +8,6 @@ import 'package:offTime/screens/off_time_route.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -22,22 +20,8 @@ void main() {
     ),
   );
   runApp(
-    MultiProvider(
-      providers: [
-        BlocProvider(create: (context) => WsConnectionBloc()),
-        BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(
-            create: (context) =>
-                UserAuthenticationBloc(userRepository: userRepository)),
-        BlocProvider(
-            create: (context) => UserBloc(
-                userAuthenticationBloc:
-                    UserAuthenticationBloc(userRepository: userRepository),
-                userRepository: userRepository)),
-      ],
-      child: MyApp(
-        userRepository: userRepository,
-      ),
+    MyApp(
+      userRepository: userRepository,
     ),
   );
 }
@@ -58,24 +42,29 @@ class MyApp extends StatelessWidget {
   MyApp({@required this.userRepository}) : assert(userRepository != null);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (ctx) => WsConnectionBloc()),
+        BlocProvider(create: (ctx) => AppThemeBloc()),
         BlocProvider(
-            create: (context) =>
-                UserAuthenticationBloc(userRepository: userRepository)),
-        BlocProvider(create: (context) => AppThemeBloc()),
+            create: (ctx) => UserAuthenticationBloc.checkIfLoggedIn(
+                userRepository: userRepository)),
+        BlocProvider(
+            create: (ctx) => UserBloc(
+                userAuthenticationBloc: ctx.read<UserAuthenticationBloc>(),
+                userRepository: userRepository)),
         BlocProvider<AnalyticsOnlineBloc>(
-            create: (BuildContext context) =>
+            create: (BuildContext ctx) =>
                 AnalyticsOnlineBloc(analyticsToServerRepository)),
         BlocProvider<AnalyticsBloc>(
-          create: (BuildContext context) => AnalyticsBloc(analyticsRepository),
+          create: (BuildContext ctx) => AnalyticsBloc(analyticsRepository),
         ),
       ],
       child: RepositoryProvider.value(
         value: this.userRepository,
         child: BlocBuilder<AppThemeBloc, ThemeData>(
-          builder: (context, state) {
+          builder: (ctx, state) {
             return MaterialApp(
               debugShowCheckedModeBanner: true,
               title: _title,
@@ -96,8 +85,21 @@ class MyStatefulWidget extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  List<Widget> pages = [
-    HomePage(),
+  final pages = [
+    BlocProvider(
+      create: (ctx) => RoomBloc(
+        user: (ctx.read<UserBloc>().state as UserLoadSuccess).user,
+        roomRepository: RoomRepository(
+          roomDataProvider: RoomDataProvider(
+            httpClient: http.Client(),
+          ),
+          wsProvider: RoomDataProviderWs(
+            socket: BlocProvider.of<WsConnectionBloc>(ctx).socket,
+          ),
+        ),
+      ),
+      child: HomePage(),
+    ),
     AnalyticsPage(),
     SettingsPage(),
   ];
