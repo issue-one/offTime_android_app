@@ -12,6 +12,12 @@ class RoomRepository {
   Future<Room> createRoom(Room room) async {
     return await roomDataProvider.createRoom(room);
   }
+  Future<Room> getRoom(String token, String name) async {
+    return await roomDataProvider.getRoom(token,name);
+  }
+  Future<List<Room>> getRooms(String token) async {
+    return await roomDataProvider.getRooms(token);
+  }
 
   Future<Room> joinRoom(Room room) async {
     return await roomDataProvider.joinRoom(room);

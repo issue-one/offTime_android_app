@@ -4,6 +4,8 @@ import 'package:offTime/blocs/room/room_event.dart';
 import 'package:offTime/blocs/room/room_state.dart';
 import 'package:offTime/repository/repository.dart';
 
+import '../../off_time.dart';
+
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final RoomRepository roomRepository;
 
@@ -16,7 +18,28 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     if (event is RoomCreate) {
       yield RoomLoading();
       try {
-        // final room = await roomRepository.createRoom(room);
+        await roomRepository.createRoom(event.room);
+        yield RoomsLoadSuccess();
+      } catch (e) {
+        print(e);
+        yield RoomOperationFailure();
+      }
+    }
+    if (event is RoomGet) {
+      yield RoomLoading();
+      try {
+        await roomRepository.getRoom(event.token,event.name);
+        yield RoomsLoadSuccess();
+      } catch (e) {
+        print(e);
+        yield RoomOperationFailure();
+      }
+    }
+    if (event is GetRooms) {
+      yield RoomLoading();
+      try {
+        await roomRepository.getRooms(event.token);
+        yield RoomsLoadSuccess();
       } catch (e) {
         print(e);
         yield RoomOperationFailure();
@@ -25,8 +48,9 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
     if (event is RoomJoin) {
       try {
-        await roomRepository.createRoom(event.room);
-        // final rooms = await roomRepository.joinRoom(RoomEnd(room));
+        Room room=  await roomRepository.createRoom(event.room);
+        await roomRepository.joinRoom(room);
+        yield RoomsLoadSuccess();
       } catch (e) {
         print(e);
         yield RoomOperationFailure();
@@ -34,8 +58,9 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     }
     if (event is RoomEnd) {
       try {
-        await roomRepository.createRoom(event.room);
-        // final rooms = await roomRepository.joinRoom(RoomEnd(room));
+        yield RoomLoading();
+        yield RoomsLoadSuccess();
+         
       } catch (e) {
         print(e);
         yield RoomOperationFailure();
@@ -43,8 +68,10 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     }
     if (event is RoomExit) {
       try {
-        await roomRepository.createRoom(event.room);
-        // final rooms = await roomRepository.joinRoom(RoomEnd(room));
+        yield RoomLoading();
+        yield RoomsLoadSuccess();
+
+        
       } catch (e) {
         print(e);
         yield RoomOperationFailure();

@@ -4,7 +4,28 @@ import 'package:offTime/models/models.dart';
 abstract class RoomEvent extends Equatable {
   const RoomEvent();
 }
+class RoomGet extends RoomEvent{
+  final String token;
+  final String name;
 
+  RoomGet(this.token, this.name);
+  @override
+  // TODO: implement props
+  List<Object> get props => [token,name];
+
+
+}
+class GetRooms extends RoomEvent{
+  final String token;
+
+
+  GetRooms(this.token);
+  @override
+  // TODO: implement props
+  List<Object> get props => [token];
+
+
+}
 class RoomCreate extends RoomEvent {
   final Room room;
 
