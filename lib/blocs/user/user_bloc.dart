@@ -38,9 +38,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapAccountUpdateRequestedToState(AccountUpdateRequested event) async* {
     yield UserLoading();
     try {
-      final user=await userRepository.updateUser(event.user, event.userUpdateInput);
+      final user = await userRepository.getUser(event.username,event.token);
+      final userUpdated=await userRepository.updateUser(user, event.userUpdateInput);
 
-      yield UserLoadSuccess(user: user);
+      yield UserLoadSuccess(user: userUpdated);
     } catch (_) {
       yield UserLoadFailure();
     }
@@ -48,7 +49,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapAccountDeleteRequestedToState(AccountDeleteRequested event) async* {
     yield UserLoading();
     try {
-      await userRepository.deleteUser(event.user);
+      await userRepository.deleteUser(event.username,event.token);
 
       yield UserLoadSuccess();
 

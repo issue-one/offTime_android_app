@@ -32,7 +32,8 @@ class UserRepository {
     return await userDataProvider.updateUser(user, userUpdateInput);
   }
 
-  Future<void> deleteUser(User user) async {
+  Future<void> deleteUser(String username , String token) async {
+    User user= await userDataProvider.getUser(username, token);
     return await userDataProvider.deleteUser(user);
   }
 

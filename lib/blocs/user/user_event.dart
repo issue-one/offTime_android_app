@@ -8,21 +8,23 @@ abstract class UserEvent extends Equatable {
 }
 
 class AccountDeleteRequested extends UserEvent {
-  final User user;
+  final String username;
+  final String token;
 
-  const AccountDeleteRequested({@required this.user}) : assert(user != null);
+  const AccountDeleteRequested({@required this.username, @required this.token}) : assert(username != null && token!=null);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [username, token];
 }
 class AccountUpdateRequested extends UserEvent {
-  final User user;
+  final String username;
+  final String token;
   final UserUpdateInput userUpdateInput;
 
-  const AccountUpdateRequested({@required this.user, @required this.userUpdateInput}) : assert(user  != null && userUpdateInput!=null);
+  const AccountUpdateRequested({@required this.username, @required this.token, @required this.userUpdateInput}) : assert(username != null && token!=null && userUpdateInput!=null);
 
   @override
-  List<Object> get props => [user,userUpdateInput];
+  List<Object> get props => [username, token,userUpdateInput];
 }
 class AddPictureRequested extends UserEvent {
   final User user;
