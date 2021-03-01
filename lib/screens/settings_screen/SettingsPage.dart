@@ -8,9 +8,12 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Settings'
+          ),
+        ),
 
         body: ListView(
           children: <Widget>[
@@ -154,8 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
 
-      ),
-    );
+      );
   }
 }
 

@@ -1,19 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app_usage/app_usage.dart';
 import 'package:http/http.dart' as http;
-import 'package:offTime/models/models.dart';
+import 'package:offTime/models/analytics_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class onlineAnalyticsProvider {
-  final _baseUrl = 'http://10.0.2.2:8080';
+  final _baseUrl = 'http://192.168.1.4:8080';
   final http.Client httpClient;
-  final String offTimeUsername = 'tseahay';
+  final String offTimeUsername = 'mikeee';
 
   onlineAnalyticsProvider(this.httpClient);
 
   Future<AnalyticsModel> createOnlineAnaly() async{
     final response = await httpClient.post(
-      Uri.http('192.168.1.10:8080', '/users/${offTimeUsername}/usageHistory'),
+      Uri.http('192.168.1.4:8080', '/users/${offTimeUsername}/usageHistory'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -38,20 +40,31 @@ class onlineAnalyticsProvider {
   }
 
   Future<AnalyticsModel> createOnlineAnalytics(
-      NewAppUsage appUsageInfo) async {
+      AppUsageInfo appUsageInfo) async {
+
+    final prefs = await SharedPreferences.getInstance();
+    final offTimeUsername = prefs.getStringList("authInfo")[0];
+    final offTimeUserToken = prefs.getStringList("authInfo")[1];
+    print(offTimeUsername);
+
+
     final response = await httpClient.post(
-      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
+      Uri.http('192.168.1.4:8080', '/users/${offTimeUsername}/appUsageHistory'),
+
       /*
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
 
        */
+      headers: {HttpHeaders.authorizationHeader:"Bearer "+ offTimeUserToken ,HttpHeaders.contentTypeHeader:"application/json"},
+
+
       body: jsonEncode(<String, dynamic>{
         "appName": "${appUsageInfo.appName}",
-        "appPackageName": "${appUsageInfo.appPackageName}",
+        "appPackageName": "${appUsageInfo.packageName}",
         "dateOfUse": "2021-02-16",
-        "timeDuration": appUsageInfo.timeDuration
+        "timeDuration": appUsageInfo.usage.inMinutes
       }),
     );
     print(response.statusCode);
@@ -60,13 +73,21 @@ class onlineAnalyticsProvider {
       return AnalyticsModel.fromJson(jsonDecode(response.body));
     } else {
       print('response status code==${response.statusCode}');
+      print('response message == ${response.body}');
       //throw Exception('Failed to create AppUsageInfo');
     }
   }
 
   Future<List<AnalyticsModel>> getOnlineAnalytics() async {
+    final prefs = await SharedPreferences.getInstance();
+    final offTimeUsername = prefs.getStringList("authInfo")[0];
+    final offTimeUserToken = prefs.getStringList("authInfo")[1];
+    print(offTimeUsername);
+
     final response =
-        await httpClient.get('$_baseUrl/users/$offTimeUsername/usageHistory');
+        await httpClient.get('$_baseUrl/users/$offTimeUsername/appUsageHistory',
+        headers: {HttpHeaders.authorizationHeader:"Bearer "+ offTimeUserToken ,HttpHeaders.contentTypeHeader:"application/json"},
+        );
     print(response.statusCode);
     if (response.statusCode == 200) {
       final rawResponse = jsonDecode(response.body);
@@ -80,8 +101,15 @@ class onlineAnalyticsProvider {
   }
 
   Future<void> deleteOnlineAppUsage() async{
+    final prefs = await SharedPreferences.getInstance();
+    final offTimeUsername = prefs.getStringList("authInfo")[0];
+    final offTimeUserToken = prefs.getStringList("authInfo")[1];
+    print(offTimeUsername);
+
     final http.Response response = await httpClient.delete(
-      '$_baseUrl/users/$offTimeUsername/usageHistory',
+      '$_baseUrl/users/$offTimeUsername/appUsageHistory',
+      headers: {HttpHeaders.authorizationHeader:"Bearer "+ offTimeUserToken ,HttpHeaders.contentTypeHeader:"application/json"},
+
 
 
     );
@@ -91,8 +119,15 @@ class onlineAnalyticsProvider {
   }
 
   Future updateOnlineAppusage(AppUsageInfo appUsageInfo) async{
+    final prefs = await SharedPreferences.getInstance();
+    final offTimeUsername = prefs.getStringList("authInfo")[0];
+    final offTimeUserToken = prefs.getStringList("authInfo")[1];
+    print(offTimeUsername);
+
     final response = await httpClient.post(
-      Uri.http('192.168.137.1:8080', '${offTimeUsername}/usageHistory'),
+      Uri.http('192.168.1.4:8080', '/users/${offTimeUsername}/appUsageHistory'),
+      headers: {HttpHeaders.authorizationHeader:"Bearer "+ offTimeUserToken ,HttpHeaders.contentTypeHeader:"application/json"},
+
       /*
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -102,11 +137,12 @@ class onlineAnalyticsProvider {
       body: jsonEncode(<String, dynamic>{
         "appName": "${appUsageInfo.appName}",
         "appPackageName": "${appUsageInfo.packageName}",
-        "dateOfUse": "2021-02-16",
+        "dateOfUse": "2021-03-02",
         "timeDuration": appUsageInfo.usage.inMinutes
       }),
     );
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return AnalyticsModel.fromJson(jsonDecode(response.body));
     } else {

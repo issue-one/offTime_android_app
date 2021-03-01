@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/blocs/Analytics/analytics_bloc.dart';
 import 'package:offTime/blocs/AnalyticsOnline/analytics_online_bloc.dart';
-import 'package:offTime/blocs/blocs.dart';
-import 'package:offTime/screens/analytics_screen/order_cruds_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AnalyticsTime {
   DailyAnalytics,
@@ -12,29 +11,78 @@ enum AnalyticsTime {
   YearlyAnalytics
 }
 
-class AnalyticsPage extends StatelessWidget {
+class AnalyticsPage extends StatefulWidget {
+  @override
+  _AnalyticsPageState createState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends State<AnalyticsPage> {
   Widget buildBottomSheet(BuildContext buildContext) {
     return Container();
+  }
+
+  String offTimeUsername = '';
+  String tokenKey = '';
+
+  String queryPageName = 'Daily';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadSharedPreference();
+  }
+
+  _loadSharedPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      offTimeUsername = prefs.getStringList("authInfo")[0];
+      tokenKey = prefs.getStringList("authInfo")[1];
+    });
+    //print(offTimeUsername);
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
+          title: Text('Analytics'),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                const PopupMenuItem(
+            PopupMenuButton<AnalyticsTime>(
+              onSelected: (AnalyticsTime time) {
+                setState(() {
+                  if (time == AnalyticsTime.DailyAnalytics) {
+                    queryPageName = 'Daily';
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsDailyRequested);
+                  } else if (time == AnalyticsTime.WeeklyAnalystics) {
+                    queryPageName = 'Weekly';
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsWeeklyRequested);
+                  } else if (time == AnalyticsTime.MonthlyAnalytics) {
+                    queryPageName = 'Monthly';
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsMonthlyRequested);
+                  } else if (time == AnalyticsTime.YearlyAnalytics) {
+                    queryPageName = 'Yearly';
+                    BlocProvider.of<AnalyticsBloc>(context)
+                        .add(AnalyticsEvent.AnalyticsYearlyRequested);
+                  }
+                });
+              },
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<AnalyticsTime>>[
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.DailyAnalytics, child: Text('Daily')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.WeeklyAnalystics,
                     child: Text('Weekly')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.MonthlyAnalytics,
                     child: Text('Monthly')),
-                const PopupMenuItem(
+                const PopupMenuItem<AnalyticsTime>(
                     value: AnalyticsTime.YearlyAnalytics,
                     child: Text('Yearly')),
               ],
@@ -43,13 +91,7 @@ class AnalyticsPage extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(
-                text: 'Daily',
-              ),
-              Tab(
-                text: 'Weekly',
-              ),
-              Tab(
-                text: 'Yearly',
+                text: queryPageName,
               ),
               Tab(
                 text: 'History',
@@ -58,11 +100,39 @@ class AnalyticsPage extends StatelessWidget {
           ),
         ),
         body: MyAnalyticsPage(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showModalBottomSheet(
-              context: context, builder: (context) => CrudButtons()),
-          child: Icon(Icons.menu),
-        ),
+        floatingActionButton: BlocBuilder<AnalyticsBloc, AnalyticsState>(
+            builder: (context, state) {
+          if (state is AnalyticsLoaded) {
+            return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(CreateOnlineAnalysisTapped(
+                        appUsageInfos: state.appUsages,
+                       // username: offTimeUsername,
+                       // tokenKey: tokenKey
+                )),
+                child: Icon(Icons.add),
+              ),
+              FloatingActionButton(
+                  child: Icon(Icons.add_chart),
+                  onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                      .add(ReadOnlineAnalysisTapped())),
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(UpdateOnlineAnalysisTappped(state.appUsages)),
+                child: Icon(Icons.refresh),
+              ),
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(DeleteOnlineAnalysisTapped()),
+                child: Icon(Icons.delete_forever),
+              ),
+            ]);
+          }
+          else{
+            return CircularProgressIndicator();
+          }
+        }),
       ),
     );
   }
@@ -118,8 +188,6 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
               });
         }
       }),
-      Text('Tab2'),
-      Text('Tab3'),
       BlocBuilder<AnalyticsOnlineBloc, AnalyticsOnlineState>(
           builder: (context, state) {
         if (state is GetOnlineAnalysisLoaded) {
@@ -142,3 +210,12 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
     ]);
   }
 }
+
+/*
+          FloatingActionButton(
+              onPressed: () => showModalBottomSheet(
+                  context: context, builder: (context) => CrudButtons()),
+              child: Icon(Icons.menu),
+          ),
+
+                 */

@@ -4,13 +4,19 @@ part of 'analytics_online_bloc.dart';
 abstract class AnalyticsOnlineEvent {}
 
 class CreateOnlineAnalysisTapped extends AnalyticsOnlineEvent{
- // final NewAppUsage appUsageInfo;
+  final List<AppUsageInfo> appUsageInfos;
+  //final String username;
+  //final String tokenKey;
 
-  //CreateOnlineAnalysisTapped(this.appUsageInfo);
-  CreateOnlineAnalysisTapped();
+  //CreateOnlineAnalysisTapped({this.appUsageInfos, this.username, this.tokenKey});
+  CreateOnlineAnalysisTapped({this.appUsageInfos});
 }
 
 class ReadOnlineAnalysisTapped extends AnalyticsOnlineEvent{
+  final String username;
+  final String tokenKey;
+
+  ReadOnlineAnalysisTapped({this.username, this.tokenKey});
   /*
   final AppUsageInfo appUsageInfo;
 
@@ -20,12 +26,20 @@ class ReadOnlineAnalysisTapped extends AnalyticsOnlineEvent{
 }
 
 class UpdateOnlineAnalysisTappped extends AnalyticsOnlineEvent{
-  final AppUsageInfo appUsageInfo;
+  final List<AppUsageInfo> appUsageInfo;
 
   UpdateOnlineAnalysisTappped(this.appUsageInfo);
+  //final String username;
+  //final String tokenKey;
+
+  //UpdateOnlineAnalysisTappped({this.appUsageInfo, this.username, this.tokenKey});
 
 }
 
 class DeleteOnlineAnalysisTapped extends AnalyticsOnlineEvent{
+  //final String username;
+  //final String tokenKey;
+
+  //DeleteOnlineAnalysisTapped({this.username, this.tokenKey});
 
 }

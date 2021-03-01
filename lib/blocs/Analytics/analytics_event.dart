@@ -7,4 +7,4 @@ abstract class AnalyticsEvent {}
 
  */
 
-enum AnalyticsEvent {AnalyticsDailyRequested, AnalyticsWeeklyRequested, AnalyticsYearlyRequested}
+enum AnalyticsEvent {AnalyticsDailyRequested, AnalyticsWeeklyRequested, AnalyticsMonthlyRequested, AnalyticsYearlyRequested}

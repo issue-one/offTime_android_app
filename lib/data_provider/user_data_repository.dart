@@ -5,11 +5,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:offTime/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:offTime/models/user_update_input.dart';
 
 
 class UserDataProvider{
-   final _baseUrl="http://192.168.1.5:8080";
+   final _baseUrl="http://192.168.1.4:8080";
    final http.Client httpClient;
 
   UserDataProvider({this.httpClient});
@@ -37,11 +38,11 @@ class UserDataProvider{
    Future<String> postToken(UserInput userInput) async {
      print("${userInput.username}");
      var uri = Uri.parse(_baseUrl);
-  print(uri.host);
-  print(uri.port);
+      print(uri.host);
+      print(uri.port);
      print("here");
      final response = await httpClient.post(
-       Uri.http('192.168.1.5:8080' ,'/token-auth'),
+       Uri.http('192.168.1.4:8080' ,'/token-auth'),
        headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
        },
