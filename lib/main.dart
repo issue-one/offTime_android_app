@@ -34,7 +34,7 @@ void main() {
     MultiProvider(
       providers: [
         BlocProvider(create: (context) => AppThemeBloc()),
-        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)..add(IsLoggedIn())),
+        BlocProvider(create: (context) => UserAuthenticationBloc(userRepository: userRepository)),
         BlocProvider(create: (context) => UserBloc(userAuthenticationBloc: UserAuthenticationBloc(userRepository: userRepository) , userRepository: userRepository)),
 
       ],
@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// This is the stateful widget that the main application instantiates.
+
 class MyStatefulWidget extends StatefulWidget {
   static const routeName = 'homeApp';
   MyStatefulWidget({Key key}) : super(key: key);

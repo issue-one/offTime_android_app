@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 
 class IntroPage extends StatelessWidget{
-static const routeName = '/';
+static const routeName = 'intro';
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,9 @@ class UserRepository{
   Future<User> createUser(UserInput userInput) async{
     await userDataProvider.createUser(userInput);
     String token =await userDataProvider.postToken(userInput);
-    return await userDataProvider.getUser(userInput.username, token);
+    User user=await userDataProvider.getUser(userInput.username, token);
+    await userDataProvider.addToSharedPreferences(user);
+    return user;
   }
   Future<User> loginUser(UserInput userInput) async{
     print("object");

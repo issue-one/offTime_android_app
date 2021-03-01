@@ -26,13 +26,12 @@ class UserAuthenticationBloc extends Bloc<UserAuthenticationEvent, UserAuthentic
 
 
   Stream<UserAuthenticationState> _mapIsLoggedInToState(IsLoggedIn event) async* {
-    yield UserAuthenticating();
+    
     try {
       final sharedData= await userRepository.getPreferences();
+      
     //  final refreshedToken=await userRepository.refreshToken(sharedData[1]);
       final user= await userRepository.getUser(sharedData[0],sharedData[1]);
-
-
       yield UserAuthenticationSuccess(user: user);
     } catch (_) {
       yield UserAuthenticationFailure();
