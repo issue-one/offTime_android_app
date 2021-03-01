@@ -129,6 +129,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               ),
             ]);
           }
+          else{
+            return CircularProgressIndicator();
+          }
         }),
       ),
     );
