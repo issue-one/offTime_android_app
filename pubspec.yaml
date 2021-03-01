@@ -43,6 +43,7 @@ dependencies:
   test: ^1.15.7
   equatable: ^1.2.6
   meta: ^1.2.4
+  web_socket_channel: ">=1.2.0 <2.0.0"
 dev_dependencies:
   flutter_test:
     sdk: flutter
