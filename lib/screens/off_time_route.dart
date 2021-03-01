@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/screens/screens.dart';
+import 'package:offTime/off_time.dart';
 
 import '../off_time.dart';
+class Load extends StatefulWidget{
+  @override
+  _LoadState createState()=>_LoadState();
+  
 
-class Load extends StatelessWidget{
+}
+
+class _LoadState extends State<Load>{
+  void initState(){
+    super.initState();
+    BlocProvider.of<UserAuthenticationBloc>(context).add(IsLoggedIn());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<UserAuthenticationBloc, UserAuthenticationState>(
       builder: (context, userAuthenticationState) {
         return Column(children: [
-          Image.asset(""),
+          Image.asset("assets/images/clock.jpg"),
           LinearProgressIndicator(
             backgroundColor: Theme.of(context).primaryColor,
             valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),),
         ],);},
         listener: (context,userAuthenticationState){
-          if(userAuthenticationState is UserAuthenticationSuccess){
-            Navigator.of(context).pushNamedAndRemoveUntil(MyStatefulWidget.routeName,(route)=>false);
-          }else{
-            Navigator.of(context).pushNamedAndRemoveUntil(IntroPage.routeName,(route)=>false);
+          print(userAuthenticationState);
+          if(userAuthenticationState is UserAuthenticationFailure){
+            Navigator.pushReplacementNamed(context,IntroPage.routeName);
+            
+          }else if(userAuthenticationState is UserAuthenticationSuccess){
+            Navigator.pushReplacementNamed(context,MyStatefulWidget.routeName);
           }
         },
         
