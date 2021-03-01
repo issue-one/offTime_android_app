@@ -87,8 +87,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final pages = [
     BlocProvider(
-      create: (ctx) => RoomBloc(
-        user: (ctx.read<UserBloc>().state as UserLoadSuccess).user,
+      create: (ctx) => RoomBloc.loadRooms(
+        // user: (ctx.read<UserBloc>().state as UserLoadSuccess).user,
+        userBloc: ctx.read<UserBloc>(),
         roomRepository: RoomRepository(
           roomDataProvider: RoomDataProvider(
             httpClient: http.Client(),

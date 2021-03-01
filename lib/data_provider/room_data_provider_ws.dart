@@ -28,5 +28,5 @@ class RoomDataProviderWs {
     }
   }
 
-  Future<Room> joinRoom(Room room) async {}
+  Future<Room> joinRoom(String roomId, String authToken) async {}
 }

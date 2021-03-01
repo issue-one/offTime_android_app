@@ -3,69 +3,51 @@ import 'package:offTime/models/models.dart';
 
 abstract class RoomEvent extends Equatable {
   const RoomEvent();
-}
-class RoomGet extends RoomEvent{
-  final String token;
-  final String name;
-
-  RoomGet(this.token, this.name);
   @override
-  // TODO: implement props
-  List<Object> get props => [token,name];
-
-
+  List<Object> get props => [];
 }
-class GetRooms extends RoomEvent{
-  final String token;
 
+class GetRoom extends RoomEvent {
+  final String id;
 
-  GetRooms(this.token);
+  GetRoom(this.id);
   @override
-  // TODO: implement props
-  List<Object> get props => [token];
-
-
+  List<Object> get props => [id];
 }
-class RoomCreate extends RoomEvent {
+
+class GetRoomHistory extends RoomEvent {}
+
+class CreateRoom extends RoomEvent {
+  final String roomName;
+
+  const CreateRoom(this.roomName);
+
+  @override
+  List<Object> get props => [roomName];
+}
+
+class JoinRoom extends RoomEvent {
+  final String roomId;
+
+  const JoinRoom(this.roomId);
+
+  @override
+  List<Object> get props => [roomId];
+}
+
+class LeaveRoom extends RoomEvent {
+  final String roomName;
+
+  const LeaveRoom(this.roomName);
+
+  @override
+  List<Object> get props => [roomName];
+}
+
+class EndRoom extends RoomEvent {
   final Room room;
 
-  const RoomCreate(this.room);
-
-  @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Created {Room: $room}';
-}
-
-class RoomJoin extends RoomEvent {
-  final Room room;
-
-  const RoomJoin(this.room);
-
-  @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Joined {Room: $room}';
-}
-
-class RoomExit extends RoomEvent {
-  final Room room;
-
-  const RoomExit(this.room);
-
-  @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Exitd {Room: $room}';
-}
-
-class RoomEnd extends RoomEvent {
-  final Room room;
-
-  const RoomEnd(this.room);
+  const EndRoom(this.room);
 
   @override
   List<Object> get props => [room];

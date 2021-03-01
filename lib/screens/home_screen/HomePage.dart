@@ -34,48 +34,50 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          /* Expanded(
-            flex: 2,
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    alignment: AlignmentDirectional.topStart,
-                    child: const Text(
-                      "Room History",
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ), */
           Expanded(
             flex: 2,
             child: Container(
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  Container(
-                    alignment: AlignmentDirectional.topStart,
-                    child: const Text(
-                      "Room History",
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Room History",
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.refresh),
+                        onPressed: () =>
+                            ctx.read<RoomBloc>().add(GetRoomHistory()),
+                      ),
+                    ],
                   ),
                   Container(
                     child: Expanded(
                       child: BlocBuilder<RoomBloc, RoomState>(
-                        builder: (ctx, state) => state is RoomsLoadSuccess
-                            ? ListView.builder(
-                                itemCount: state.rooms.length,
-                                itemBuilder: (ctx, index) => ListTile(
-                                  title: Text(state.rooms[index].name),
-                                ),
-                              )
-                            : Center(
-                                child: const Text("Room History Empty"),
-                              ),
-                      ),
+                          builder: (ctx, state) {
+                        if (state is RoomsLoadSuccess) {
+                          return state.rooms.length > 1
+                              ? ListView.builder(
+                                  itemCount: state.rooms.length,
+                                  itemBuilder: (ctx, index) => ListTile(
+                                    title: Text(state.rooms[index].name),
+                                  ),
+                                )
+                              : Center(
+                                  child: const Text("Room History Empty"),
+                                );
+                        } else if (state is RoomOperationFailure) {
+                          return Center(
+                            child: Text(state.errMessage ?? "Error"),
+                          );
+                        } else {
+                          return Center(
+                            child: const Text("Room History Loading..."),
+                          );
+                        }
+                      }),
                     ),
                   ),
                 ],
@@ -88,6 +90,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+/// these widgets are for testing the websocket implementation (ignore them)
 class WsShowcase extends StatefulWidget {
   static const routeName = 'home';
   @override
