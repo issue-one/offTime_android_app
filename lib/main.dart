@@ -2,8 +2,6 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/off_time_route.dart';
@@ -17,10 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 
-import 'Data/Data Providers/analytics_data.dart';
-import 'Data/Data Providers/analytics_to_server_data_provider.dart';
-import 'Data/Repository/analytics_repository.dart';
-import 'Data/Repository/analytics_to_server_repostiory.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
@@ -45,9 +39,15 @@ class MyApp extends StatelessWidget {
   AnalyticsRepository(AnalyticsDataProvider());
   final AnalyticsToServerRepository analyticsToServerRepository =
   AnalyticsToServerRepository(onlineAnalyticsProvider(http.Client()));
-  final UserRepository userRepository = UserRepository(
+  /*final UserRepository userRepository = UserRepository(
     userDataProvider: UserDataProvider(
       httpClient: http.Client(),),);
+
+   */
+  final UserRepository userRepository;
+
+  MyApp({@required this.userRepository})
+      : assert(userRepository != null);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,6 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: true,
               title: _title,
               theme: state,
-              home: MyStatefulWidget(),
               onGenerateRoute: OffTimeAppRoute.generateRoute,
             );
           },

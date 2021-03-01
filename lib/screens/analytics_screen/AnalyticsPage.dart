@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics%20Online/analytics_online_bloc.dart';
-import 'package:offTime/Bussiness%20Logic/Analytics/analytics_bloc.dart';
+import 'package:offTime/blocs/Analytics/analytics_bloc.dart';
+import 'package:offTime/blocs/AnalyticsOnline/analytics_online_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AnalyticsTime {
   DailyAnalytics,
@@ -20,7 +21,26 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     return Container();
   }
 
+  String offTimeUsername = '';
+  String tokenKey = '';
+
   String queryPageName = 'Daily';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadSharedPreference();
+  }
+
+  _loadSharedPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      offTimeUsername = prefs.getStringList("authInfo")[0];
+      tokenKey = prefs.getStringList("authInfo")[1];
+    });
+    //print(offTimeUsername);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,39 +100,36 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ),
         ),
         body: MyAnalyticsPage(),
-        floatingActionButton:
-            BlocBuilder<AnalyticsBloc,AnalyticsState>(
-              builder: (context,state){
-                if(state is AnalyticsLoaded){
-                  return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-
-                    FloatingActionButton(
-                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
-                          .add(CreateOnlineAnalysisTapped(state.appUsages)),
-                      child: Icon(Icons.add),
-                    ),
-                    FloatingActionButton(
-                        child: Icon(Icons.add_chart),
-                        onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
-                            .add(ReadOnlineAnalysisTapped())),
-                    FloatingActionButton(
-                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
-                  .add(UpdateOnlineAnalysisTappped(state.appUsages)),
-
-
-                      child: Icon(Icons.refresh),
-
-
-                    ),
-                    FloatingActionButton(
-                      onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
-                          .add(DeleteOnlineAnalysisTapped()),
-                      child: Icon(Icons.delete_forever),
-                    ),
-                  ]);
-                }
-              }
-            ),
+        floatingActionButton: BlocBuilder<AnalyticsBloc, AnalyticsState>(
+            builder: (context, state) {
+          if (state is AnalyticsLoaded) {
+            return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(CreateOnlineAnalysisTapped(
+                        appUsageInfos: state.appUsages,
+                       // username: offTimeUsername,
+                       // tokenKey: tokenKey
+                )),
+                child: Icon(Icons.add),
+              ),
+              FloatingActionButton(
+                  child: Icon(Icons.add_chart),
+                  onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                      .add(ReadOnlineAnalysisTapped())),
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(UpdateOnlineAnalysisTappped(state.appUsages)),
+                child: Icon(Icons.refresh),
+              ),
+              FloatingActionButton(
+                onPressed: () => BlocProvider.of<AnalyticsOnlineBloc>(context)
+                    .add(DeleteOnlineAnalysisTapped()),
+                child: Icon(Icons.delete_forever),
+              ),
+            ]);
+          }
+        }),
       ),
     );
   }
@@ -190,10 +207,6 @@ class _MyAnalyticsPageState extends State<MyAnalyticsPage> {
     ]);
   }
 }
-
-
-
-
 
 /*
           FloatingActionButton(

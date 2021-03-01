@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:app_usage/app_usage.dart';
-import 'package:offTime/Data/Data%20Providers/analytics_to_server_data_provider.dart';
+import 'package:offTime/data_provider/analytics_to_server_data_provider.dart';
 import 'package:offTime/models/analytics_model.dart';
 
 class AnalyticsToServerRepository {
