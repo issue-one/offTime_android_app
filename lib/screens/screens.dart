@@ -7,4 +7,4 @@ export 'home_screen/HomePage.dart';
 export 'analytics_screen/AnalyticsPage.dart';
 export 'analytics_screen/order_cruds_page.dart';
 export 'create_room_screen/CreateRoomPage.dart';
-export 'ongoing_room_screen/ongoing_room_screen.dart';
+export 'room_details_screen/room_details_screen.dart';
