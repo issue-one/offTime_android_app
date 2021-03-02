@@ -23,7 +23,8 @@ class CreateRoomBloc extends Bloc<CreateRoomEvent, CreateRoomState> {
     try {
       final user = roomBloc.userBloc.currentUser;
       final room = await roomBloc.roomRepository
-          .createRoomWs(user.username, event.roomName, user.token);
+          .createRoomWs(event.roomName, user.username, user.token);
+      roomBloc.add(IncomingRoomUpdate(room));
       yield CreateRoomSuccess(room);
     } catch (e) {
       yield CreateRoomFailure(e.toString());

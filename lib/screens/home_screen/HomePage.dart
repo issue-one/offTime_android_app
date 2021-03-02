@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/blocs/blocs.dart';
 import 'package:offTime/blocs/room/room.dart';
 import 'package:offTime/models/models.dart';
+import 'package:offTime/screens/ongoing_room_screen/ongoing_room_screen.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = 'home';
@@ -82,6 +83,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            // -  -  - room history section
             Expanded(
               flex: 2,
               child: Container(
@@ -102,17 +104,35 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Container(
+                      //  -  -  - room history list
                       child: Expanded(
                         child: BlocBuilder<RoomBloc, RoomState>(
                             builder: (ctx, state) {
                           if (state is RoomsLoadSuccess) {
+                            final keys = state.rooms.keys.toList();
                             return state.rooms.length > 1
                                 ? ListView.builder(
                                     itemCount: state.rooms.length,
-                                    itemBuilder: (ctx, index) => ListTile(
-                                      title: Text(state.rooms[index].name),
-                                    ),
-                                  )
+                                    itemBuilder: (ctx, index) {
+                                      final room = state.rooms[keys[index]];
+                                      if (room.hasEnded) {
+                                        ListTile(
+                                          title: Text(room.name),
+                                        );
+                                      }
+                                      return ListTile(
+                                        title: Text(room.name),
+                                        subtitle: const Text("Ongoing"),
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            ctx,
+                                            OngoingRoomScreen.routeName,
+                                            arguments:
+                                                OngoingRoomRouteArgs(room.id),
+                                          );
+                                        },
+                                      );
+                                    })
                                 : Center(
                                     child: const Text("Room History Empty"),
                                   );
@@ -156,7 +176,16 @@ class _CreateRoomSheetState extends State<CreateRoomSheet> {
         padding: const EdgeInsets.only(top: 25, left: 25, right: 25),
         child: Form(
           key: _formKey,
-          child: BlocBuilder<CreateRoomBloc, CreateRoomState>(
+          child: BlocConsumer<CreateRoomBloc, CreateRoomState>(
+            listener: (oldState, newState) {
+              if (newState is CreateRoomSuccess) {
+                Navigator.pushNamed(
+                  ctx,
+                  OngoingRoomScreen.routeName,
+                  arguments: OngoingRoomRouteArgs(newState.room.id),
+                );
+              }
+            },
             builder: (ctx, state) => Column(
               children: [
                 const Text("Create room"),
@@ -211,7 +240,13 @@ class _JoinRoomSheetState extends State<JoinRoomSheet> {
             key: _formKey,
             child: BlocConsumer<JoinRoomBloc, JoinRoomState>(
               listener: (oldState, newState) {
-                if (newState is JoinRoomSuccess) print("success joining room");
+                if (newState is JoinRoomSuccess) {
+                  Navigator.pushNamed(
+                    ctx,
+                    OngoingRoomScreen.routeName,
+                    arguments: OngoingRoomRouteArgs(_roomId),
+                  );
+                }
               },
               builder: (ctx, state) => Column(
                 children: [
@@ -224,10 +259,9 @@ class _JoinRoomSheetState extends State<JoinRoomSheet> {
                     initialValue:
                         (ctx.read<RoomBloc>().state as RoomsLoadSuccess)
                                 .rooms
+                                .values
                                 .firstWhere(
-                                  (r) =>
-                                      r.endTime.millisecondsSinceEpoch ==
-                                      -62135596800000,
+                                  (r) => !r.hasEnded,
                                   orElse: () => null,
                                 )
                                 ?.id ??

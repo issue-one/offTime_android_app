@@ -22,6 +22,8 @@ class Room extends Equatable {
   @override
   List<Object> get props => [id, name, hostUsername];
 
+  bool get hasEnded => endTime.millisecondsSinceEpoch != -62135596800000;
+
   factory Room.fromJson(Map<String, dynamic> json) {
     print(json);
     return Room(

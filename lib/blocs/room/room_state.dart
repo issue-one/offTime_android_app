@@ -11,9 +11,9 @@ class RoomState extends Equatable {
 class RoomLoading extends RoomState {}
 
 class RoomsLoadSuccess extends RoomState {
-  final List<Room> rooms;
+  final Map<String, Room> rooms;
 
-  RoomsLoadSuccess([this.rooms = const []]);
+  RoomsLoadSuccess([this.rooms = const {}]);
 
   @override
   List<Object> get props => [rooms];

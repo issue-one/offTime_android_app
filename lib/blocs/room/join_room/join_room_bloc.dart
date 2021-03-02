@@ -23,6 +23,7 @@ class JoinRoomBloc extends Bloc<JoinRoomEvent, JoinRoomState> {
       final user = roomBloc.userBloc.currentUser;
       final room = await roomBloc.roomRepository
           .joinRoomWs(event.roomId, user.username, user.token);
+      roomBloc.add(IncomingRoomUpdate(room));
       yield JoinRoomSuccess(room);
     } catch (e) {
       yield JoinRoomFailure(e.toString());
