@@ -157,11 +157,12 @@ class Profile extends StatelessWidget{
                 onPressed: () =>
                     BlocProvider.of<UserSettingBloc>(context)
                         .add(AccountDeleteRequested(user: state.user)),
+                    
 
                 child: Text(
-                  "Delete Account",
+                  "Delete Account, ${state.user}",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                      fontWeight: FontWeight.bold, color: Theme.of(context).accentColor),
                 ),
               ),
             ),
@@ -297,7 +298,7 @@ class _SettingsState extends State<SettingsPageForm> {
                 child: Text(
                   "Log Out",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                      fontWeight: FontWeight.bold, color: Theme.of(context).accentColor),
                 ),
               ),
             ),
