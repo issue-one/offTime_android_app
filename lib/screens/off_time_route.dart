@@ -64,12 +64,12 @@ class OffTimeAppRoute {
         builder: (context) => MyStatefulWidget(),
       );
     }
-    if (settings.name == OngoingRoomScreen.routeName) {
-      OngoingRoomRouteArgs args = settings.arguments;
+    if (settings.name == RoomDetailsPage.routeName) {
+      RoomDetailsRouteArgs args = settings.arguments;
       return MaterialPageRoute(
         builder: (ctx) => BlocProvider(
           create: (ctx) => OngoingRoomBloc(ctx.read<RoomBloc>()),
-          child: OngoingRoomScreen(args.roomId),
+          child: RoomDetailsPage(args.roomId),
         ),
       );
     }

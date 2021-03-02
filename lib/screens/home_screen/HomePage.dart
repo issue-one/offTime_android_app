@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/blocs/blocs.dart';
 import 'package:offTime/blocs/room/room.dart';
 import 'package:offTime/models/models.dart';
-import 'package:offTime/screens/ongoing_room_screen/ongoing_room_screen.dart';
+import 'package:offTime/screens/screens.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = 'home';
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                             builder: (ctx, state) {
                           if (state is RoomsLoadSuccess) {
                             final keys = state.rooms.keys.toList();
-                            return state.rooms.length > 1
+                            return state.rooms.length > 0
                                 ? ListView.builder(
                                     itemCount: state.rooms.length,
                                     itemBuilder: (ctx, index) {
@@ -122,13 +122,13 @@ class _HomePageState extends State<HomePage> {
                                       }
                                       return ListTile(
                                         title: Text(room.name),
-                                        subtitle: const Text("Ongoing"),
+                                        trailing: const Text("Ongoing"),
                                         onTap: () {
                                           Navigator.pushNamed(
                                             ctx,
-                                            OngoingRoomScreen.routeName,
+                                            RoomDetailsPage.routeName,
                                             arguments:
-                                                OngoingRoomRouteArgs(room.id),
+                                                RoomDetailsRouteArgs(room.id),
                                           );
                                         },
                                       );
@@ -181,8 +181,8 @@ class _CreateRoomSheetState extends State<CreateRoomSheet> {
               if (newState is CreateRoomSuccess) {
                 Navigator.pushNamed(
                   ctx,
-                  OngoingRoomScreen.routeName,
-                  arguments: OngoingRoomRouteArgs(newState.room.id),
+                  RoomDetailsPage.routeName,
+                  arguments: RoomDetailsRouteArgs(newState.room.id),
                 );
               }
             },
@@ -243,8 +243,8 @@ class _JoinRoomSheetState extends State<JoinRoomSheet> {
                 if (newState is JoinRoomSuccess) {
                   Navigator.pushNamed(
                     ctx,
-                    OngoingRoomScreen.routeName,
-                    arguments: OngoingRoomRouteArgs(_roomId),
+                    RoomDetailsPage.routeName,
+                    arguments: RoomDetailsRouteArgs(_roomId),
                   );
                 }
               },
