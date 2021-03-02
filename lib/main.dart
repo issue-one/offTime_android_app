@@ -2,6 +2,7 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/blocs/user/user.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/off_time_route.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AnalyticsBloc>(
           create: (BuildContext ctx) => AnalyticsBloc(analyticsRepository),
         ),
+        BlocProvider<UserSettingBloc>(create: (ctx)=> UserSettingBloc(userBloc: ctx.read<UserBloc>(), userRepository: this.userRepository),),
         BlocProvider<RoomBloc>(
           // lazy: false,
           create: (ctx) {
@@ -84,7 +86,7 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<AppThemeBloc, ThemeData>(
           builder: (ctx, state) {
             return MaterialApp(
-              debugShowCheckedModeBanner: true,
+              debugShowCheckedModeBanner: false,
               title: _title,
               theme: state,
               onGenerateRoute: OffTimeAppRoute.generateRoute,
@@ -141,36 +143,36 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         inkColor: Colors.black12, //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.dashboard,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.dashboard,
-                color: Colors.red,
+                color: Theme.of(context).accentColor,
               ),
-              title: Text("Home")),
+              title: Text("Home", )),
           BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.stairs_outlined,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.stairs_outlined,
-                color: Colors.deepPurple,
+                color: Theme.of(context).accentColor,
               ),
               title: Text("Analysis")),
           BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.settings,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.settings,
-                color: Colors.indigo,
+                color: Theme.of(context).accentColor,
               ),
               title: Text("Settings")),
         ],

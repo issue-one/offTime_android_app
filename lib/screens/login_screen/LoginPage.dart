@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // padding: EdgeInsets.only(left: 25, right: 25, top: 25),
+        padding: EdgeInsets.all(30.0),
         color: Theme.of(context).primaryColor,
         child: Center(
           child: Column(
@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
                   },
                   child: Text(
                     "Sign Up",
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.headline4,
                   ))
             ],
           ),
@@ -61,7 +61,7 @@ class _LoginState extends State<LoginPageForm> {
       child: BlocConsumer<UserAuthenticationBloc, UserAuthenticationState>(
         listener: (ctx, state) {
           if (state is UserAuthenticationSuccess)
-            Navigator.of(ctx).pushNamedAndRemoveUntil("/", (route) => false);
+            Navigator.of(ctx).pushNamedAndRemoveUntil(MyStatefulWidget.routeName, (route) => false);
         },
         builder: (ctx, authState) => Container(
           padding: EdgeInsets.symmetric(horizontal: 25),
@@ -70,7 +70,7 @@ class _LoginState extends State<LoginPageForm> {
             child: Column(
               children: [
                 if (authState is UserAuthenticationFailure)
-                  Text(authState.errMessage),
+                  Text("Wrong credentials"),
                 TextFormField(
                     validator: (value) {
                       if (value.isEmpty) {
@@ -100,9 +100,9 @@ class _LoginState extends State<LoginPageForm> {
                       if (value.isEmpty) {
                         return 'Enter password';
                       }
-                      /* if (value.length<8){
+                      else if (value.length<8){
                       return 'Password can not be less than 8 characters';
-                    } */
+                    } 
                       return null;
                     },
                     decoration: InputDecoration(
@@ -137,6 +137,7 @@ class _LoginState extends State<LoginPageForm> {
                             print(_user);
                             BlocProvider.of<UserAuthenticationBloc>(ctx)
                                 .add(event);
+                              
                           }
                         },
                         navigation: false,

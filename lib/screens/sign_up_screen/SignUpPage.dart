@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offTime/off_time.dart';
 import 'package:offTime/screens/login_screen/LoginPage.dart';
 import 'package:offTime/screens/login_signup_screen/IntroPage.dart';
+import 'package:email_validator/email_validator.dart';
+
 
 class SignUpPage extends StatelessWidget {
   static const routeName = 'Sign Up';
@@ -11,18 +13,18 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          padding: EdgeInsets.all(50.0),
+          padding: EdgeInsets.all(30.0),
           color: Theme.of(context).primaryColor,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
                 child: Text(
                   "Sign Up",
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
               ),
-              Expanded(child: SignUpPageForm()),
+              SignUpPageForm(),
               Text(
                 "Already have an account?",
                 style: Theme.of(context).textTheme.headline2,
@@ -34,7 +36,7 @@ class SignUpPage extends StatelessWidget {
                   },
                   child: Text(
                     "Login",
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.headline4,
                   ))
             ],
           )),
@@ -52,21 +54,31 @@ class _SignUpState extends State<SignUpPageForm> {
 
   final Map<String, dynamic> _user = {};
 
-  @override
-  Widget build(BuildContext context) {
+   @override
+  Widget build(BuildContext ctx) {
     return Container(
-      color: Theme.of(context).primaryColor,
-      child: Scaffold(
-        body: Form(
+      color: Theme.of(ctx).primaryColor,
+      child: BlocConsumer<UserAuthenticationBloc, UserAuthenticationState>(
+        listener: (ctx, state) {
+          if (state is UserAuthenticationSuccess)
+            Navigator.of(ctx).pushNamedAndRemoveUntil(MyStatefulWidget.routeName, (route) => false);
+        },
+        builder: (ctx, authState) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          child: Form(
           key: _formKey,
           child: Container(
             color: Theme.of(context).primaryColor,
             child: Column(
               children: [
+                if (authState is UserAuthenticationFailure)
+                  Text("Wrong credentials ${authState.errMessage}"),
                 TextFormField(
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Username';
+                      }else if (value.length<5) {
+                        return 'Username should be atleast 5 characters';
                       }
                       return null;
                     },
@@ -75,7 +87,13 @@ class _SignUpState extends State<SignUpPageForm> {
                         icon: Icon(
                           Icons.person_outline,
                           size: 30,
-                        )),
+                          color: Theme.of(context).accentColor,
+                        
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).accentColor),
+                      ),),
                     onSaved: (value) {
                       setState(() {
                         this._user["username"] = value;
@@ -85,6 +103,8 @@ class _SignUpState extends State<SignUpPageForm> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Email';
+                      }else if(!EmailValidator.validate(value)){
+                        return 'Enter proper email address';
                       }
                       return null;
                     },
@@ -93,6 +113,11 @@ class _SignUpState extends State<SignUpPageForm> {
                       icon: Icon(
                         Icons.email_outlined,
                         size: 30,
+                        color: Theme.of(context).accentColor,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).accentColor),
                       ),
                     ),
                     onSaved: (value) {
@@ -104,6 +129,8 @@ class _SignUpState extends State<SignUpPageForm> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter password';
+                      }else if (value.length<8) {
+                        return 'Password should be atleast 8 characters';
                       }
                       return null;
                     },
@@ -112,8 +139,13 @@ class _SignUpState extends State<SignUpPageForm> {
                         icon: Icon(
                           Icons.lock_outline,
                           size: 30,
+                          color: Theme.of(context).accentColor,
                         ),
-                        fillColor: Colors.amber),
+                        focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).accentColor),
+                      ),
+                        ),
                     onSaved: (value) {
                       setState(() {
                         this._user["password"] = value;
@@ -133,13 +165,11 @@ class _SignUpState extends State<SignUpPageForm> {
                                 SignUpRequested(
                                     userInput: UserInput(
                                         username: _user["username"],
-                                        password: _user["password"],
+                                        password: _user["password"] ,
                                         email: _user["email"]));
 
                             BlocProvider.of<UserAuthenticationBloc>(context)
                                 .add(event);
-                            Navigator.of(context)
-                                .pushNamedAndRemoveUntil("/", (route) => false);
                           }
                         },
                         navigation: false,
@@ -148,6 +178,7 @@ class _SignUpState extends State<SignUpPageForm> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

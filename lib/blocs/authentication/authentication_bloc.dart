@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:offTime/data_provider/data_provider.dart';
 import 'package:offTime/repository/repository.dart';
 import 'package:offTime/blocs/authentication/authentication.dart';
+
 
 class UserAuthenticationBloc
     extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
@@ -38,8 +41,23 @@ class UserAuthenticationBloc
         return;
       }
       //  final refreshedToken=await userRepository.refreshToken(sharedData[1]);
-      final user = await userRepository.getUser(sharedData[0], sharedData[1]);
-      yield UserAuthenticationSuccess(user: user);
+      
+        try {
+          final user = await userRepository.getUser(sharedData[0], sharedData[1]);
+          yield UserAuthenticationSuccess(user: user);
+        } catch (e) {
+          if(e is SocketException){
+            yield UserOffLine(sharedData[0],sharedData[1]);
+          }else if(e is NoUserException){
+            yield UserAuthenticationFailure(errMessage: e.toString());
+          }else{
+              yield UserAuthenticationFailure(errMessage: e.toString());
+          }
+          
+        }
+      
+      
+      
     } catch (err) {
       yield UserAuthenticationFailure(errMessage: err.toString());
     }
@@ -63,6 +81,7 @@ class UserAuthenticationBloc
       print(event.userInput);
       final user = await userRepository.loginUser(event.userInput);
       print(event.userInput.password);
+      print("checking");
       yield UserAuthenticationSuccess(user: user);
     } catch (err) {
       yield UserAuthenticationFailure(errMessage: err.toString());
