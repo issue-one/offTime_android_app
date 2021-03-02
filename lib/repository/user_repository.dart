@@ -32,9 +32,10 @@ class UserRepository {
     return await userDataProvider.updateUser(user, userUpdateInput);
   }
 
-  Future<void> deleteUser(String username , String token) async {
-    User user= await userDataProvider.getUser(username, token);
-    return await userDataProvider.deleteUser(user);
+  Future<void> deleteUser(User user) async {
+    await userDataProvider.deleteUser(user);
+    await userDataProvider.deletePreferences();
+    
   }
 
   Future<String> putPicture(User user, File file) async {
@@ -51,5 +52,6 @@ class UserRepository {
 
   Future<void> logoutUser() async {
     await userDataProvider.clearAuthInfoFromSharedPreferences();
+    await userDataProvider.deletePreferences();
   }
 }

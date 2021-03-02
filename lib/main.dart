@@ -2,6 +2,7 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/blocs/user/user.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/off_time_route.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AnalyticsBloc>(
           create: (BuildContext ctx) => AnalyticsBloc(analyticsRepository),
         ),
+        BlocProvider<UserSettingBloc>(create: (ctx)=> UserSettingBloc(userBloc: ctx.read<UserBloc>(), userRepository: this.userRepository),),
         BlocProvider<RoomBloc>(
           // lazy: false,
           create: (ctx) {

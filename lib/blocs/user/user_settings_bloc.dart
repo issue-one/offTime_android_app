@@ -11,27 +11,16 @@ import 'package:offTime/models/User.dart';
 
 import 'package:offTime/repository/repository.dart';
 
-class UserBloc extends Bloc<UserEvent, UserState> {
+import '../../off_time.dart';
+
+class UserSettingBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
-  final UserAuthenticationBloc userAuthenticationBloc;
+  final UserBloc userBloc;
 
-  UserBloc(
-      {@required this.userRepository, @required this.userAuthenticationBloc})
-      : assert(userRepository != null),
-        super(userAuthenticationBloc.state is UserAuthenticationSuccess
-            ? UserLoadSuccess(
-                user:
-                    (userAuthenticationBloc.state as UserAuthenticationSuccess)
-                        .user)
-            : UserLoadFailure());
-
-  User get currentUser => (state as UserLoadSuccess).user;
-
-   
-
+  UserSettingBloc({@required this.userRepository,@required this.userBloc}):assert(userRepository != null),assert(userBloc != null), super(UserLoading());
 
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    if (userAuthenticationBloc.state is UserAuthenticationSuccess) {
+    
       if (event is AccountUpdateRequested) {
         yield* _mapAccountUpdateRequestedToState(event);
       } else if (event is AddPictureRequested) {
@@ -39,33 +28,31 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       } else if (event is AccountDeleteRequested) {
         yield* _mapAccountDeleteRequestedToState(event);
       }
-    } else {
-      yield UserLoadFailure();
-    }
+   
   }
 
   Stream<UserState> _mapAccountUpdateRequestedToState(
       AccountUpdateRequested event) async* {
     yield UserLoading();
     try {
-      final user = await userRepository.updateUser(event.user, event.userUpdateInput);
+      final user =
+          await userRepository.updateUser(userBloc.currentUser, event.userUpdateInput);
 
       yield UserLoadSuccess(user: user);
     } catch (_) {
       yield UserLoadFailure();
     }
   }
-  
 
   Stream<UserState> _mapAccountDeleteRequestedToState(
       AccountDeleteRequested event) async* {
     yield UserLoading();
     try {
-      await userRepository.deleteUser(event.user);
-
-      yield UserLoadSuccess();
-    } catch (_) {
+      await userRepository.deleteUser(userBloc.currentUser);
       yield UserLoadFailure();
+      
+    } catch (_) {
+      yield UserLoadSuccess();
     }
   }
 
@@ -73,9 +60,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       AddPictureRequested event) async* {
     yield UserLoading();
     try {
-      await userRepository.putPicture(event.user, event.file);
+      await userRepository.putPicture(userBloc.currentUser, event.file);
       final user =
-          await userRepository.getUser(event.user.username, event.user.token);
+          await userRepository.getUser(userBloc.currentUser.username, userBloc.currentUser.token);
       yield UserLoadSuccess(user: user);
     } catch (_) {
       yield UserLoadFailure();

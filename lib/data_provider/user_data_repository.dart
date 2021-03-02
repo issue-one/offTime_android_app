@@ -135,12 +135,17 @@ class UserDataProvider {
     final response = await httpClient.delete(
       '$_baseUrl/users/${user.username}',
       headers: {
-        HttpHeaders.authorizationHeader: "Bearer" + user.token,
+        HttpHeaders.authorizationHeader: "Bearer " + user.token,
       },
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to delete User: code ${response.statusCode}');
     }
+  }
+  Future<void> deletePreferences()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+    
   }
 
   Future<String> putPicture(User user, File file) async {

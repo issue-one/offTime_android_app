@@ -5,26 +5,29 @@ import 'package:offTime/models/models.dart';
 
 abstract class UserEvent extends Equatable {
   const UserEvent();
+  @override
+  List<Object> get props => [];
 }
+// class GetUser extends UserEvent{
 
+  
+// }
 class AccountDeleteRequested extends UserEvent {
-  final String username;
-  final String token;
+  final User user;
 
-  const AccountDeleteRequested({@required this.username, @required this.token}) : assert(username != null && token!=null);
+  const AccountDeleteRequested({@required this.user}) : assert(user != null);
 
   @override
-  List<Object> get props => [username, token];
+  List<Object> get props => [user];
 }
 class AccountUpdateRequested extends UserEvent {
-  final String username;
-  final String token;
+  final User user;
   final UserUpdateInput userUpdateInput;
 
-  const AccountUpdateRequested({@required this.username, @required this.token, @required this.userUpdateInput}) : assert(username != null && token!=null && userUpdateInput!=null);
+  const AccountUpdateRequested({@required this.user, @required this.userUpdateInput}) : assert(user != null&& userUpdateInput!=null);
 
   @override
-  List<Object> get props => [username, token,userUpdateInput];
+  List<Object> get props => [user,userUpdateInput];
 }
 class AddPictureRequested extends UserEvent {
   final User user;
