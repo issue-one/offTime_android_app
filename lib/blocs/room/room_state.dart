@@ -19,4 +19,11 @@ class RoomsLoadSuccess extends RoomState {
   List<Object> get props => [rooms];
 }
 
-class RoomOperationFailure extends RoomState {}
+class RoomOperationFailure extends RoomState {
+  final String errMessage;
+
+  RoomOperationFailure(this.errMessage);
+
+  @override
+  List<Object> get props => [errMessage];
+}

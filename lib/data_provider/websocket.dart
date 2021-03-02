@@ -58,7 +58,7 @@ class OffTimeSocket {
   bool get isConnected => this._connected;
 
   /// Get a new instance of the message stream.
-  Stream<Message<dynamic>> get messageStream {
+  Stream<Message<Map<String, dynamic>>> get messageStream {
     if (!this._connected) throw NotConnectedException();
     return this
         ._streamAsBrodacast
@@ -97,7 +97,8 @@ class OffTimeSocket {
   Future<void> emit<T>(Message<T> message) async {
     if (!this._connected) throw NotConnectedException();
     print("outgoing message: ${message.data.toString()}");
-    this._channel.sink.add(message.toJson());
+    final jsonString = message.toJson();
+    this._channel.sink.add(jsonString);
   }
 
   void listen(
@@ -107,14 +108,14 @@ class OffTimeSocket {
     this._eventListeners[event] = listener;
   }
 
-  Future<Message<dynamic>> sendRequest<T>(
-    String requestEvent,
-    T message,
-    String responseEvent,
-  ) async {
+  Future<Message<dynamic>> sendRequest<T>(String requestEvent, T message,
+      {String responseEvent, Duration timeout}) async {
     if (!this._connected) throw NotConnectedException();
 
-    // keep a reference if there were any previous listeners;
+    if (responseEvent == null) responseEvent = requestEvent;
+    if (timeout == null) timeout = Duration(seconds: 3);
+
+    /* // keep a reference if there were any previous listeners;
     final oldListener = this._eventListeners[responseEvent];
     final responseListener = (OffTimeSocket socket, dynamic data) {
       if (oldListener != null) {
@@ -122,12 +123,15 @@ class OffTimeSocket {
         this._eventListeners[responseEvent] = oldListener;
         oldListener.call(socket, data);
       }
-      return message;
+      return data;
     };
     // replace with new listener
-    this._eventListeners[responseEvent] = responseListener;
+    this._eventListeners[responseEvent] = responseListener; */
 
     await this.emit(Message(requestEvent, message));
-    return this.messageStream.firstWhere((msg) => msg.event == responseEvent);
+    return this
+        .messageStream
+        .firstWhere((msg) => msg.event == responseEvent)
+        .timeout(timeout);
   }
 }
