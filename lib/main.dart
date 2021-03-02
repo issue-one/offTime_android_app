@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<AppThemeBloc, ThemeData>(
           builder: (ctx, state) {
             return MaterialApp(
-              debugShowCheckedModeBanner: true,
+              debugShowCheckedModeBanner: false,
               title: _title,
               theme: state,
               onGenerateRoute: OffTimeAppRoute.generateRoute,
@@ -136,36 +136,36 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         inkColor: Colors.black12, //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.dashboard,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.dashboard,
-                color: Colors.red,
+                color: Theme.of(context).accentColor,
               ),
-              title: Text("Home")),
+              title: Text("Home", )),
           BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.stairs_outlined,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.stairs_outlined,
-                color: Colors.deepPurple,
+                color: Theme.of(context).accentColor,
               ),
               title: Text("Analysis")),
           BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
+              backgroundColor: Theme.of(context).accentColor,
               icon: Icon(
                 Icons.settings,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
               activeIcon: Icon(
                 Icons.settings,
-                color: Colors.indigo,
+                color: Theme.of(context).accentColor,
               ),
               title: Text("Settings")),
         ],

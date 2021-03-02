@@ -8,8 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:offTime/models/user_update_input.dart';
 
+class NoUserException implements Exception{
+  }
+
 class UserDataProvider {
-  final _baseUrl = "http://192.168.8.117:8080";
+  final _baseUrl = "http://192.168.1.5:8080";
   final http.Client httpClient;
 
   UserDataProvider({this.httpClient});
@@ -26,7 +29,10 @@ class UserDataProvider {
       }),
     );
     //TODO 409 CONFLICT
-    if (response.statusCode != 200) {
+    if (response.statusCode == 409) {
+      throw Exception(
+          'User of this ${jsonDecode(response.body)['field']} already exists');
+    }else if (response.statusCode != 200) {
       throw Exception(
           'Failed to create user User: code ${response.statusCode}');
     }
@@ -56,29 +62,35 @@ class UserDataProvider {
   }
 
   Future<User> getUser(String username, String token) async {
-    final response = await httpClient.get(
-      '$_baseUrl/users/$username',
-      headers: {
-        HttpHeaders.authorizationHeader: "Bearer " + token,
-        HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final user = jsonDecode(response.body);
-      return User(
-          username: user['username'],
-          createdAt: DateTime.parse(user['createdAt']),
-          updatedAt: DateTime.parse(user['updatedAt']),
-          email: user['email'],
-          pictureURL: user['pictureURL'] == null ? null : user['pictureURL'],
-          roomHistory: (user['roomHistory'] as List)
-              .map((item) => item as String)
-              .toList(),
-          token: token);
-    } else {
-      throw Exception(
-          'Failed to load User $username: code ${response.statusCode}');
+    try {
+      final response = await httpClient.get(
+        '$_baseUrl/users/$username',
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer " + token,
+          HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        final user = jsonDecode(response.body);
+        return User(
+            username: user['username'],
+            createdAt: DateTime.parse(user['createdAt']),
+            updatedAt: DateTime.parse(user['updatedAt']),
+            email: user['email'],
+            pictureURL: user['pictureURL'] == null ? null : user['pictureURL'],
+            roomHistory: (user['roomHistory'] as List)
+                .map((item) => item as String)
+                .toList(),
+            token: token);
+      } else if(response.statusCode==404){
+          throw new NoUserException();
+      }else {
+        throw Exception(
+            'Failed to load User $username: code ${response.statusCode}');
+      }
+    } on SocketException  {
+      throw new SocketException("Socket error");
     }
   }
 

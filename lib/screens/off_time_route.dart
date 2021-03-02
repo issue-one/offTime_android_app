@@ -35,6 +35,10 @@ class _LoadState extends State<Load> {
         print(userAuthenticationState);
         if (userAuthenticationState is UserNotAuthenticated) {
           Navigator.pushReplacementNamed(context, IntroPage.routeName);
+        }else if (userAuthenticationState is UserAuthenticationFailure) {
+          Navigator.pushReplacementNamed(context, IntroPage.routeName);
+        }else if (userAuthenticationState is UserOffLine) {
+          Navigator.pushReplacementNamed(context, MyStatefulWidget.routeName);
         } else if (userAuthenticationState is UserAuthenticationSuccess) {
           Navigator.pushReplacementNamed(context, MyStatefulWidget.routeName);
         }
