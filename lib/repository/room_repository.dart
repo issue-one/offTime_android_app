@@ -28,14 +28,30 @@ class RoomRepository {
   }
 
   Future<Room> createRoomWs(
-      String roomName, String username, String authToken) async {
+    String roomName,
+    String username,
+    String authToken,
+  ) async {
     final room = await wsProvider.createRoom(username, roomName);
     // this.rooms[room.id] = room;
     return room;
   }
 
   Future<Room> joinRoomWs(
-      String roomId, String username, String authToken) async {
+    String roomId,
+    String username,
+    String authToken,
+  ) async {
     return await wsProvider.joinRoom(roomId, username, authToken);
+  }
+
+  Future<void> updateUserUsageWs(
+    int usageSeconds,
+    String roomId,
+    String username,
+    String authToken,
+  ) async {
+    return await wsProvider.updateUserUsageWs(
+        usageSeconds, roomId, username, authToken);
   }
 }

@@ -1,8 +1,3 @@
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:offTime/data_provider/websocket.dart';
 import 'package:offTime/models/models.dart';
 
@@ -28,7 +23,10 @@ class RoomDataProviderWs {
   }
 
   Future<Room> joinRoom(
-      String roomId, String username, String authToken) async {
+    String roomId,
+    String username,
+    String authToken,
+  ) async {
     var response = await this.socket.sendRequest(
       "joinRoom",
       <String, dynamic>{"username": username, "roomID": roomId},
@@ -40,6 +38,31 @@ class RoomDataProviderWs {
       default:
         throw Exception(
             "Unable to join room: ${response.data["message"].toString()}");
+    }
+  }
+
+  Future<void> updateUserUsageWs(
+    int usageSeconds,
+    String roomId,
+    String username,
+    String authToken,
+  ) async {
+    var response = await this.socket.sendRequest(
+      "updateRoomUsage",
+      <String, dynamic>{
+        "username": username,
+        "roomID": roomId,
+        "usageSeconds": usageSeconds
+      },
+    ) as Message<Map<String, dynamic>>;
+    switch (response.data["code"]) {
+      case 200:
+        break;
+      case 400:
+        throw Exception("Unable to update usage: room not found");
+      default:
+        throw Exception(
+            "Unable to update: ${response.data["message"].toString()}");
     }
   }
 }
