@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offTime/blocs/room/room.dart';
 import 'package:offTime/off_time.dart';
 
 import '../off_time.dart';
@@ -61,6 +62,15 @@ class OffTimeAppRoute {
     if (settings.name == MyStatefulWidget.routeName) {
       return MaterialPageRoute(
         builder: (context) => MyStatefulWidget(),
+      );
+    }
+    if (settings.name == RoomDetailsPage.routeName) {
+      RoomDetailsRouteArgs args = settings.arguments;
+      return MaterialPageRoute(
+        builder: (ctx) => BlocProvider(
+          create: (ctx) => OngoingRoomBloc(ctx.read<RoomBloc>()),
+          child: RoomDetailsPage(args.roomId),
+        ),
       );
     }
 

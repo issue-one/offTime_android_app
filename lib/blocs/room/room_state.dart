@@ -11,12 +11,19 @@ class RoomState extends Equatable {
 class RoomLoading extends RoomState {}
 
 class RoomsLoadSuccess extends RoomState {
-  final List<Room> rooms;
+  final Map<String, Room> rooms;
 
-  RoomsLoadSuccess([this.rooms = const []]);
+  RoomsLoadSuccess([this.rooms = const {}]);
 
   @override
   List<Object> get props => [rooms];
 }
 
-class RoomOperationFailure extends RoomState {}
+class RoomOperationFailure extends RoomState {
+  final String errMessage;
+
+  RoomOperationFailure(this.errMessage);
+
+  @override
+  List<Object> get props => [errMessage];
+}

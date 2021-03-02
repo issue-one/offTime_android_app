@@ -3,73 +3,50 @@ import 'package:offTime/models/models.dart';
 
 abstract class RoomEvent extends Equatable {
   const RoomEvent();
-}
-class RoomGet extends RoomEvent{
-  final String token;
-  final String name;
-
-  RoomGet(this.token, this.name);
   @override
-  // TODO: implement props
-  List<Object> get props => [token,name];
-
-
+  List<Object> get props => [];
 }
-class GetRooms extends RoomEvent{
-  final String token;
 
+class GetRoom extends RoomEvent {
+  final String id;
 
-  GetRooms(this.token);
+  GetRoom(this.id);
   @override
-  // TODO: implement props
-  List<Object> get props => [token];
-
-
+  List<Object> get props => [id];
 }
-class RoomCreate extends RoomEvent {
+
+class IncomingRoomUpdate extends RoomEvent {
   final Room room;
 
-  const RoomCreate(this.room);
-
+  IncomingRoomUpdate(this.room);
   @override
   List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Created {Room: $room}';
 }
 
-class RoomJoin extends RoomEvent {
-  final Room room;
+class GetRoomHistory extends RoomEvent {}
 
-  const RoomJoin(this.room);
+class LeaveRoom extends RoomEvent {
+  final String roomName;
 
+  const LeaveRoom(this.roomName);
+  /*         if (event is ConnectionError || event is Disconnected) {
+      yield WsState.Connecting;
+      await Future.delayed(const Duration(seconds: 1));
+      if (this._reconnect) {
+        this.add(Reconnect());
+      } else {
+        yield WsState.NotConnected;
+      }
+    } else if (event is StopConnection) {
+      this._reconnect = false;
+      this.socket.close();
+      yield WsState.NotConnected;
+    } else if (event is Reconnect || event is Connect) {
+      if (event is Connect) this._reconnect = true;
+      yield WsState.Connecting;
+      await this.socket.connect();
+      yield WsState.Connected;
+    } */
   @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Joined {Room: $room}';
-}
-
-class RoomExit extends RoomEvent {
-  final Room room;
-
-  const RoomExit(this.room);
-
-  @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Exitd {Room: $room}';
-}
-
-class RoomEnd extends RoomEvent {
-  final Room room;
-
-  const RoomEnd(this.room);
-
-  @override
-  List<Object> get props => [room];
-
-  @override
-  String toString() => 'Room Endd {Room: $room}';
+  List<Object> get props => [roomName];
 }
