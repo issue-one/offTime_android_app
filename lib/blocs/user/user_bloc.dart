@@ -50,6 +50,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final user = await userRepository.updateUser(event.user, event.userUpdateInput);
 
+
       yield UserLoadSuccess(user: user);
     } catch (_) {
       yield UserLoadFailure();
