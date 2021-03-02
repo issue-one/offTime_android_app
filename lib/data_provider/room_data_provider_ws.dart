@@ -15,10 +15,9 @@ class RoomDataProviderWs {
 
   Future<Room> createRoom(String username, String roomName) async {
     var response = await this.socket.sendRequest(
-        "createRoom",
-        <String, dynamic>{"username": username, "roomName": roomName},
-        "createRoom") as Message<Map<String, dynamic>>;
-    print(response.toString());
+      "createRoom",
+      <String, dynamic>{"username": username, "roomName": roomName},
+    ) as Message<Map<String, dynamic>>;
     switch (response.data["code"]) {
       case 200:
         return Room.fromJson(response.data["message"]);
@@ -28,5 +27,19 @@ class RoomDataProviderWs {
     }
   }
 
-  Future<Room> joinRoom(Room room) async {}
+  Future<Room> joinRoom(
+      String roomId, String username, String authToken) async {
+    var response = await this.socket.sendRequest(
+      "joinRoom",
+      <String, dynamic>{"username": username, "roomID": roomId},
+    ) as Message<Map<String, dynamic>>;
+    switch (response.data["code"]) {
+      case 200:
+        return Room.fromJson(response.data["message"]);
+        break;
+      default:
+        throw Exception(
+            "Unable to join room: ${response.data["message"].toString()}");
+    }
+  }
 }

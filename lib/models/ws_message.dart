@@ -7,8 +7,5 @@ class Message<T> {
   factory Message.fromJson(Map<String, dynamic> json) =>
       Message(json["event"], json["data"]);
 
-  String toJson() => jsonEncode({
-        "event": event,
-        "data": jsonEncode(data),
-      });
+  String toJson() => '{ "event": "$event", "data": ${jsonEncode(data)}}';
 }

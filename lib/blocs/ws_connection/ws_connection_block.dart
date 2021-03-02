@@ -38,6 +38,7 @@ class WsConnectionBloc extends Bloc<WsEvent, WsState> {
       onFinish: this._onFinishHandler,
     );
   }
+  factory WsConnectionBloc.connect() => WsConnectionBloc()..add(Connect());
 
   void _onErrorHandler(OffTimeSocket socket, Object err) {
     this.add(ConnectionError(err));
@@ -52,7 +53,7 @@ class WsConnectionBloc extends Bloc<WsEvent, WsState> {
   Stream<WsState> mapEventToState(WsEvent event) async* {
     print("got event: ${event.toString()}");
     print("reconnect?: ${this._reconnect}");
-    if (event is ConnectionError) {
+    if (event is ConnectionError || event is Disconnected) {
       yield WsState.Connecting;
       await Future.delayed(const Duration(seconds: 1));
       if (this._reconnect) {
@@ -60,8 +61,6 @@ class WsConnectionBloc extends Bloc<WsEvent, WsState> {
       } else {
         yield WsState.NotConnected;
       }
-    } else if (event is Disconnected) {
-      yield WsState.NotConnected;
     } else if (event is StopConnection) {
       this._reconnect = false;
       this.socket.close();
