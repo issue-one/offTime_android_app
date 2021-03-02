@@ -9,32 +9,33 @@ import '../../off_time.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final RoomRepository roomRepository;
   final UserBloc userBloc;
+  final WsConnectionBloc wsBloc;
 
-  RoomBloc({@required this.roomRepository, @required this.userBloc})
+  RoomBloc(
+      {@required this.roomRepository,
+      @required this.userBloc,
+      @required this.wsBloc})
       : assert(roomRepository != null),
         assert(userBloc != null),
-        super(RoomLoading());
+        assert(wsBloc != null),
+        super(RoomLoading()) {
+    wsBloc.add(Connect());
+  }
 
   factory RoomBloc.loadRooms(
-          {@required RoomRepository roomRepository, UserBloc userBloc}) =>
-      RoomBloc(roomRepository: roomRepository, userBloc: userBloc)
-        ..add(GetRoomHistory());
-
-  User _getCurrentUser() => (userBloc.state as UserLoadSuccess).user;
+          {@required RoomRepository roomRepository,
+          UserBloc userBloc,
+          WsConnectionBloc wsBloc}) =>
+      RoomBloc(
+        roomRepository: roomRepository,
+        userBloc: userBloc,
+        wsBloc: wsBloc,
+      )..add(GetRoomHistory());
 
   @override
   Stream<RoomState> mapEventToState(RoomEvent event) async* {
-    final user = _getCurrentUser();
-    if (event is CreateRoom) {
-      yield RoomLoading();
-      try {
-        await roomRepository.createRoomWs(
-            user.username, event.roomName, user.token);
-        yield RoomsLoadSuccess();
-      } catch (e) {
-        yield RoomOperationFailure(e.toString());
-      }
-    } else if (event is GetRoom) {
+    final user = userBloc.currentUser;
+    if (event is GetRoom) {
       yield RoomLoading();
       try {
         await roomRepository.getRoom(event.id, user.token);
@@ -44,14 +45,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       }
     } else if (event is GetRoomHistory) {
       yield* this._mapEventGetRoomHistory(event);
-    } else if (event is JoinRoom) {
-      try {
-        Room room =
-            await roomRepository.joinRoomWs(user.username, event.roomId);
-        yield RoomsLoadSuccess();
-      } catch (e) {
-        yield RoomOperationFailure(e.toString());
-      }
     } else if (event is EndRoom) {
       throw UnimplementedError();
     } else if (event is LeaveRoom) {
@@ -62,10 +55,16 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   Stream<RoomState> _mapEventGetRoomHistory(GetRoomHistory event) async* {
     yield RoomLoading();
     try {
-      final rooms = await roomRepository.getRoomHistory(_getCurrentUser());
+      final rooms = await roomRepository.getRoomHistory(userBloc.currentUser);
       yield RoomsLoadSuccess(rooms);
     } catch (e) {
       yield RoomOperationFailure(e.toString());
     }
+  }
+
+  @override
+  Future<void> close() async {
+    this.wsBloc.add(StopConnection());
+    await super.close();
   }
 }

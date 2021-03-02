@@ -60,6 +60,24 @@ class MyApp extends StatelessWidget {
         BlocProvider<AnalyticsBloc>(
           create: (BuildContext ctx) => AnalyticsBloc(analyticsRepository),
         ),
+        BlocProvider<RoomBloc>(
+          // lazy: false,
+          create: (ctx) {
+            final wsBloc = BlocProvider.of<WsConnectionBloc>(ctx);
+            return RoomBloc.loadRooms(
+              userBloc: ctx.read<UserBloc>(),
+              wsBloc: wsBloc,
+              roomRepository: RoomRepository(
+                roomDataProvider: RoomDataProvider(
+                  httpClient: http.Client(),
+                ),
+                wsProvider: RoomDataProviderWs(
+                  socket: wsBloc.socket,
+                ),
+              ),
+            );
+          },
+        ),
       ],
       child: RepositoryProvider.value(
         value: this.userRepository,
@@ -86,21 +104,7 @@ class MyStatefulWidget extends StatefulWidget {
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final pages = [
-    BlocProvider(
-      create: (ctx) => RoomBloc.loadRooms(
-        // user: (ctx.read<UserBloc>().state as UserLoadSuccess).user,
-        userBloc: ctx.read<UserBloc>(),
-        roomRepository: RoomRepository(
-          roomDataProvider: RoomDataProvider(
-            httpClient: http.Client(),
-          ),
-          wsProvider: RoomDataProviderWs(
-            socket: BlocProvider.of<WsConnectionBloc>(ctx).socket,
-          ),
-        ),
-      ),
-      child: HomePage(),
-    ),
+    HomePage(),
     AnalyticsPage(),
     SettingsPage(),
   ];

@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:meta/meta.dart';
-import 'package:offTime/blocs/room/room.dart';
 import 'package:offTime/data_provider/data_provider.dart';
 import 'package:offTime/models/models.dart';
 
@@ -36,7 +34,8 @@ class RoomRepository {
     return room;
   }
 
-  Future<Room> joinRoomWs(String roomId, String authToken) async {
-    return await wsProvider.joinRoom(roomId, authToken);
+  Future<Room> joinRoomWs(
+      String roomId, String username, String authToken) async {
+    return await wsProvider.joinRoom(roomId, username, authToken);
   }
 }

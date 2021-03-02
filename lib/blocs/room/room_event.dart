@@ -17,24 +17,6 @@ class GetRoom extends RoomEvent {
 
 class GetRoomHistory extends RoomEvent {}
 
-class CreateRoom extends RoomEvent {
-  final String roomName;
-
-  const CreateRoom(this.roomName);
-
-  @override
-  List<Object> get props => [roomName];
-}
-
-class JoinRoom extends RoomEvent {
-  final String roomId;
-
-  const JoinRoom(this.roomId);
-
-  @override
-  List<Object> get props => [roomId];
-}
-
 class LeaveRoom extends RoomEvent {
   final String roomName;
 
