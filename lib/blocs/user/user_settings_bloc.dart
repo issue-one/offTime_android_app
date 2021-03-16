@@ -39,7 +39,8 @@ class UserSettingBloc extends Bloc<UserEvent, UserState> {
           await userRepository.updateUser(userBloc.currentUser, event.userUpdateInput);
 
       yield UserLoadSuccess(user: user);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       yield UserLoadFailure();
     }
   }

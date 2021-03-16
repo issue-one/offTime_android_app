@@ -27,7 +27,7 @@ enum WsState { Connected, Connecting, NotConnected }
 
 class WsConnectionBloc extends Bloc<WsEvent, WsState> {
   // void Function(Object) onSocketError;
-  final baseUrl = 'ws://192.168.8.117:8080/ws';
+  final baseUrl = 'ws://192.168.43.41:8080/ws';
   OffTimeSocket socket;
   bool _reconnect = true;
 

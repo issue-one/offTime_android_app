@@ -56,6 +56,9 @@ class OffTimeAppRoute {
     if (settings.name == IntroPage.routeName) {
       return MaterialPageRoute(builder: (context) => IntroPage());
     }
+    if (settings.name == SettingsPage.routeName) {
+      return MaterialPageRoute(builder: (context) => SettingsPage());
+    }
 
     if (settings.name == LoginPage.routeName) {
       return MaterialPageRoute(builder: (context) => LoginPage());

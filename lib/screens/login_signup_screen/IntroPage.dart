@@ -44,14 +44,7 @@ class IntroPage extends StatelessWidget {
             ),
           ),
         ),
-        if (authBloc.state is UserAuthenticationFailure)
-          Center(
-              child: Container(
-            width: 200,
-            height: 200,
-            child: ErrorWidget(
-                (authBloc.state as UserAuthenticationFailure).errMessage),
-          )),
+        
       ]),
     );
   }

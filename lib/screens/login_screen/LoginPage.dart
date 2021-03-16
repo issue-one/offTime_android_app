@@ -61,7 +61,8 @@ class _LoginState extends State<LoginPageForm> {
       child: BlocConsumer<UserAuthenticationBloc, UserAuthenticationState>(
         listener: (ctx, state) {
           if (state is UserAuthenticationSuccess)
-            Navigator.of(ctx).pushNamedAndRemoveUntil(MyStatefulWidget.routeName, (route) => false);
+            Navigator.of(ctx).pushNamedAndRemoveUntil(
+                MyStatefulWidget.routeName, (route) => false);
         },
         builder: (ctx, authState) => Container(
           padding: EdgeInsets.symmetric(horizontal: 25),
@@ -96,13 +97,11 @@ class _LoginState extends State<LoginPageForm> {
                       });
                     }),
                 TextFormField(
+                    obscureText: true,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter password';
                       }
-                      else if (value.length<8){
-                      return 'Password can not be less than 8 characters';
-                    } 
                       return null;
                     },
                     decoration: InputDecoration(
@@ -137,7 +136,6 @@ class _LoginState extends State<LoginPageForm> {
                             print(_user);
                             BlocProvider.of<UserAuthenticationBloc>(ctx)
                                 .add(event);
-                              
                           }
                         },
                         navigation: false,

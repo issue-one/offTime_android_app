@@ -33,9 +33,9 @@ class Room extends Equatable {
       startTime: DateTime.parse(json["startTime"]),
       endTime: DateTime.parse(json["endTime"]),
     );
-    if (json.containsKey('userUsages'))
-      room.userUsages =
-          (json['userUsages'] as Map<String, dynamic>).cast<String, int>();
+    room.userUsages = json.containsKey('userUsages')
+        ? (json['userUsages'] as Map<String, dynamic>).cast<String, int>()
+        : Map<String, int>();
     return room;
   }
 

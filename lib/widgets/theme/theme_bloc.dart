@@ -5,15 +5,15 @@ import 'theme.dart';
 enum ThemeEvent { lightTheme, darkTheme}
 
 class AppThemeBloc extends Bloc<ThemeEvent,ThemeData>{
-  AppThemeBloc() : super(lightAppTheme);
+  AppThemeBloc() : super(MyTheme.lightAppTheme);
   @override
   Stream<ThemeData> mapEventToState(ThemeEvent event) async* {
     switch(event){
       case ThemeEvent.lightTheme:
-        yield lightAppTheme;
+        yield MyTheme.lightAppTheme;
         break;
       case ThemeEvent.darkTheme:
-        yield darkAppTheme;
+        yield MyTheme.darkAppTheme;
         break;
     }
     

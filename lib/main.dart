@@ -6,6 +6,7 @@ import 'package:offTime/blocs/user/user.dart';
 import 'package:offTime/screens/analytics_screen/AnalyticsPage.dart';
 import 'package:offTime/screens/home_screen/HomePage.dart';
 import 'package:offTime/screens/off_time_route.dart';
+import 'package:offTime/screens/room_details_screen/TimerCounter.dart';
 import 'package:offTime/screens/settings_screen/SettingsPage.dart';
 import 'package:offTime/off_time.dart';
 
@@ -61,7 +62,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<AnalyticsBloc>(
           create: (BuildContext ctx) => AnalyticsBloc(analyticsRepository),
         ),
-        BlocProvider<UserSettingBloc>(create: (ctx)=> UserSettingBloc(userBloc: ctx.read<UserBloc>(), userRepository: this.userRepository),),
+        BlocProvider<UserSettingBloc>(
+          create: (ctx) => UserSettingBloc(
+              userBloc: ctx.read<UserBloc>(),
+              userRepository: this.userRepository),
+        ),
         BlocProvider<RoomBloc>(
           // lazy: false,
           create: (ctx) {
@@ -106,6 +111,7 @@ class MyStatefulWidget extends StatefulWidget {
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final pages = [
+    // TimeCounter(),
     HomePage(),
     AnalyticsPage(),
     SettingsPage(),
@@ -132,6 +138,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
        */
       body: pages[_selectedIndex],
       bottomNavigationBar: BubbleBottomBar(
+        backgroundColor: Theme.of(context).primaryColor,
         opacity: .2,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -140,7 +147,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         // fabLocation: BubbleBottomBarFabLocation.end, //new
         hasNotch: true, //new
         hasInk: true, //new, gives a cute ink effect
-        inkColor: Colors.black12, //optional, uses theme color if not specified
+        inkColor: Theme.of(context)
+            .accentColor, //optional, uses theme color if not specified
         items: [
           BubbleBottomBarItem(
               backgroundColor: Theme.of(context).accentColor,
@@ -152,7 +160,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 Icons.dashboard,
                 color: Theme.of(context).accentColor,
               ),
-              title: Text("Home", )),
+              title: Text(
+                "Home",
+              )),
           BubbleBottomBarItem(
               backgroundColor: Theme.of(context).accentColor,
               icon: Icon(

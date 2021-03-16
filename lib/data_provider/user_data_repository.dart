@@ -8,11 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:offTime/models/user_update_input.dart';
 
-class NoUserException implements Exception{
-  }
+class NoUserException implements Exception {}
 
 class UserDataProvider {
-  final _baseUrl = "http://192.168.1.5:8080";
+  final _baseUrl = "http://192.168.43.41:8080";
   final http.Client httpClient;
 
   UserDataProvider({this.httpClient});
@@ -32,7 +31,7 @@ class UserDataProvider {
     if (response.statusCode == 409) {
       throw Exception(
           'User of this ${jsonDecode(response.body)['field']} already exists');
-    }else if (response.statusCode != 200) {
+    } else if (response.statusCode != 200) {
       throw Exception(
           'Failed to create user User: code ${response.statusCode}');
     }
@@ -70,7 +69,7 @@ class UserDataProvider {
           HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8",
         },
       );
-      
+
       if (response.statusCode == 200) {
         final user = jsonDecode(response.body);
         return User(
@@ -83,13 +82,13 @@ class UserDataProvider {
                 .map((item) => item as String)
                 .toList(),
             token: token);
-      } else if(response.statusCode==404){
-          throw new NoUserException();
-      }else {
+      } else if (response.statusCode == 404) {
+        throw new NoUserException();
+      } else {
         throw Exception(
             'Failed to load User $username: code ${response.statusCode}');
       }
-    } on SocketException  {
+    } on SocketException {
       throw new SocketException("Socket error");
     }
   }
@@ -111,23 +110,26 @@ class UserDataProvider {
   }
 
   Future<User> updateUser(User user, UserUpdateInput userUpdateInput) async {
+    print(user);
+    print(userUpdateInput);
+
     final http.Response response = await httpClient.patch(
-      '$_baseUrl/${user.username}',
+      '$_baseUrl/users/${user.username}',
       headers: {
-        HttpHeaders.authorizationHeader: "Bearer" + user.token,
+        HttpHeaders.authorizationHeader: "Bearer " + user.token,
         HttpHeaders.contentTypeHeader: "application/json; charset=UTF-8"
       },
       body: jsonEncode(<String, dynamic>{
         'email': userUpdateInput.email,
         'password': userUpdateInput.password,
-        'pictureURL': userUpdateInput.pictureURL,
       }),
     );
     if (response.statusCode == 200) {
       final user = jsonDecode(response.body);
       return User.fromJson(user);
     } else {
-      throw Exception('Failed to update User: code ${response.statusCode}');
+      throw Exception(
+          'Failed to update User: code ${response.statusCode} and ${response.body}');
     }
   }
 
@@ -142,10 +144,10 @@ class UserDataProvider {
       throw Exception('Failed to delete User: code ${response.statusCode}');
     }
   }
-  Future<void> deletePreferences()async{
+
+  Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
-    
   }
 
   Future<String> putPicture(User user, File file) async {

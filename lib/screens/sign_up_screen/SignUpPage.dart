@@ -126,6 +126,7 @@ class _SignUpState extends State<SignUpPageForm> {
                       });
                     }),
                 TextFormField(
+                  obscureText: true,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter password';
